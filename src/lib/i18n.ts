@@ -117,7 +117,7 @@ export const TEXT = {
         title: 'Note quiz',
         description: 'Tap the target note on the fretboard.',
         correct: 'Correct!',
-        incorrect: (noteName: string) => `Wrong: ${noteName}`,
+        incorrect: (noteName: string) => `Incorrect. You pressed ${noteName}.`,
       },
       degreeQuiz: {
         title: 'Degree quiz',
@@ -254,7 +254,7 @@ export const TEXT = {
         title: 'ノート当てクイズ',
         description: '次の音を指板からタップしてください。',
         correct: '正解！',
-        incorrect: (noteName: string) => `違います。${noteName}`,
+        incorrect: (noteName: string) => `違います。あなたが押したのは ${noteName}`,
       },
       degreeQuiz: {
         title: '度数当てクイズ',

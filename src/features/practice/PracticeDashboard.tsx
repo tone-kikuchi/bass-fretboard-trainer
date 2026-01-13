@@ -5,6 +5,7 @@ import DegreeQuiz from './DegreeQuiz';
 import ChordToneLanding from './ChordToneLanding';
 import GuideToneTrainer from './GuideToneTrainer';
 import { TEXT, type Language } from '../../lib/i18n';
+import FretboardSettings from '../fretboard/FretboardSettings';
 
 type PracticeDashboardProps = {
   language: Language;
@@ -19,7 +20,23 @@ export default function PracticeDashboard({ language }: PracticeDashboardProps) 
     { id: 'guide', label: modeLabels.guide },
   ];
   const [mode, setMode] = useState('note');
-  const { isLandscape, setLandscape } = useAppStore();
+  const {
+    keyRoot,
+    scaleId,
+    chordId,
+    progressionId,
+    stringCount,
+    tuningId,
+    isLandscape,
+    setKeyRoot,
+    setScaleId,
+    setChordId,
+    setProgressionId,
+    setStringCount,
+    setTuningId,
+    setLandscape,
+  } = useAppStore();
+  const showSettings = mode !== 'note';
 
   return (
     <div className="practice-dashboard">
@@ -46,6 +63,23 @@ export default function PracticeDashboard({ language }: PracticeDashboardProps) 
         ))}
       </div>
       <div className="practice-dashboard__content">
+        {showSettings ? (
+          <FretboardSettings
+            language={language}
+            keyRoot={keyRoot}
+            scaleId={scaleId}
+            chordId={chordId}
+            progressionId={progressionId}
+            stringCount={stringCount}
+            tuningId={tuningId}
+            onKeyChange={setKeyRoot}
+            onScaleChange={setScaleId}
+            onChordChange={setChordId}
+            onProgressionChange={setProgressionId}
+            onStringCountChange={setStringCount}
+            onTuningChange={setTuningId}
+          />
+        ) : null}
         {mode === 'note' && <NoteQuiz />}
         {mode === 'degree' && <DegreeQuiz />}
         {mode === 'landing' && <ChordToneLanding />}
