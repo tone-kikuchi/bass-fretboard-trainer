@@ -63,9 +63,9 @@ export default function FretboardGrid({
         ))}
       </div>
       <div className="fretboard__rows">
-        {strings.map((stringData) => (
+        {strings.map((stringData, stringIndex) => (
           <div key={stringData.name} className="fretboard__row">
-            <div className="fretboard__string-label">{stringData.name}</div>
+            <div className="fretboard__string-label">{stringIndex + 1}</div>
             {frets.map((fret) => {
               const cell = stringData.cellsByFret.get(fret);
               if (!cell) {
