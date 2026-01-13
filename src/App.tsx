@@ -47,6 +47,20 @@ export default function App() {
   const resetStats = useStatsStore((state) => state.reset);
   const scale = getScaleDefinition(scaleId);
   const scaleNotes = scale.intervals.map((interval) => (keyRoot + interval) % 12);
+  const scaleNoteNames = scale.intervals.map((interval) => noteNumberToName(keyRoot + interval));
+  const stringScaleNotes = useMemo(() => {
+    const scaleNoteSet = new Set(scaleNotes);
+    return tuning.map((string) => {
+      const notes = Array.from({ length: 13 }, (_, fret) => {
+        const noteNumber = (string.note + fret) % 12;
+        if (!scaleNoteSet.has(noteNumber)) {
+          return null;
+        }
+        return { fret, noteName: noteNumberToName(noteNumber) };
+      }).filter((note): note is { fret: number; noteName: string } => Boolean(note));
+      return { stringName: string.name, notes };
+    });
+  }, [scaleNotes, tuning]);
   const chordTones = getChordTones(keyRoot, chordId);
   const guideTones = getGuideTones(keyRoot, chordId);
   const degreeMap = new Map(scaleNotes.map((note, index) => [note, degreeLabel(index)]));
@@ -160,6 +174,40 @@ export default function App() {
                   <span>Key: {noteNumberToName(keyRoot)}</span>
                   <span>Scale: {scale.name}</span>
                   <span>Tuning: {tuningLabel}</span>
+                </div>
+                <div className="scale-info">
+                  <div>
+                    <h3>
+                      {noteNumberToName(keyRoot)} {scale.name} の音列
+                    </h3>
+                    <div className="scale-info__notes">
+                      {scaleNoteNames.map((note, index) => (
+                        <span key={`${note}-${index}`} className="scale-info__note">
+                          {note}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <h3>指板上の並び (0-12フレット)</h3>
+                    <div className="scale-info__strings">
+                      {stringScaleNotes.map((string) => (
+                        <div key={string.stringName} className="scale-info__string">
+                          <span className="scale-info__string-name">{string.stringName}</span>
+                          <div className="scale-info__string-notes">
+                            {string.notes.map((note) => (
+                              <span
+                                key={`${string.stringName}-${note.fret}`}
+                                className="scale-info__fret-note"
+                              >
+                                {note.fret}:{note.noteName}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </section>
             }
