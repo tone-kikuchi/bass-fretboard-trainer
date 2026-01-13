@@ -61,7 +61,18 @@ export default function FretboardGrid({
   const middleStringIndex = Math.floor((strings.length - 1) / 2);
 
   useEffect(() => {
-    wrapperRef.current?.scrollTo({ left: 0, top: 0 });
+    const el = wrapperRef.current;
+    if (!el) {
+      return;
+    }
+
+    if (typeof el.scrollTo === 'function') {
+      el.scrollTo({ left: 0, top: 0 });
+      return;
+    }
+
+    el.scrollLeft = 0;
+    el.scrollTop = 0;
   }, [isLandscape]);
 
   return (
