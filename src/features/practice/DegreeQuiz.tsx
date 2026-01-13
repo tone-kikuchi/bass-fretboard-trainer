@@ -3,6 +3,7 @@ import { buildFretboard } from '../../lib/music/fretboard';
 import { buildTuning } from '../../lib/music/tuning';
 import { degreeLabel, intervalLabelFromRoot, noteNumberToName } from '../../lib/music/notes';
 import { getScaleDefinition } from '../../lib/music/scales';
+import { TEXT, getScaleLabel } from '../../lib/i18n';
 import { useAppStore } from '../../store/appStore';
 import { useStatsStore } from '../../store/statsStore';
 import FretboardGrid from '../../components/FretboardGrid';
@@ -10,7 +11,7 @@ import FretboardGrid from '../../components/FretboardGrid';
 const MODE_ID = 'degree-quiz';
 
 export default function DegreeQuiz() {
-  const { keyRoot, scaleId, layers, zoom, stringCount, tuningId } = useAppStore();
+  const { language, keyRoot, scaleId, layers, zoom, stringCount, tuningId } = useAppStore();
   const cells = useMemo(
     () => buildFretboard(24, buildTuning(stringCount, tuningId)),
     [stringCount, tuningId],
@@ -19,6 +20,7 @@ export default function DegreeQuiz() {
   const scale = getScaleDefinition(scaleId);
   const [degreeIndex, setDegreeIndex] = useState(() => Math.floor(Math.random() * scale.intervals.length));
   const [feedback, setFeedback] = useState('');
+  const practiceText = TEXT[language].practice.degreeQuiz;
   const intervalMap = useMemo(
     () =>
       new Map(
@@ -34,7 +36,9 @@ export default function DegreeQuiz() {
 
   const handleClick = (cell: (typeof cells)[number]) => {
     const isCorrect = cell.noteNumber === targetNote;
-    setFeedback(isCorrect ? '正解！' : `違います。${noteNumberToName(cell.noteNumber)}`);
+    setFeedback(
+      isCorrect ? practiceText.correct : practiceText.incorrect(noteNumberToName(cell.noteNumber)),
+    );
     recordResult(MODE_ID, isCorrect);
     setDegreeIndex(Math.floor(Math.random() * scale.intervals.length));
   };
@@ -42,10 +46,14 @@ export default function DegreeQuiz() {
   return (
     <div className="practice">
       <div className="practice__header">
-        <h3>度数当てクイズ</h3>
-        <p>指定した度数の音をタップしてください。</p>
+        <h3>{practiceText.title}</h3>
+        <p>{practiceText.description}</p>
         <div className="practice__target">
-          {noteNumberToName(keyRoot)} {scale.name} の {degreeLabel(degreeIndex)} 度
+          {practiceText.target(
+            noteNumberToName(keyRoot),
+            getScaleLabel(scale.id, language),
+            degreeLabel(degreeIndex),
+          )}
         </div>
         <p className="practice__feedback">{feedback}</p>
       </div>

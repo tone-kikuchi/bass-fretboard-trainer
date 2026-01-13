@@ -1,6 +1,8 @@
+import { TEXT, type Language } from '../lib/i18n';
 import type { ProgressionPreset } from '../lib/music/harmony';
 
 export type TransportProps = {
+  language: Language;
   tempo: number;
   isPlaying: boolean;
   currentBar: number;
@@ -10,6 +12,7 @@ export type TransportProps = {
 };
 
 export default function Transport({
+  language,
   tempo,
   isPlaying,
   currentBar,
@@ -17,14 +20,16 @@ export default function Transport({
   onTempoChange,
   onToggle,
 }: TransportProps) {
+  const transportText = TEXT[language].transport;
+
   return (
     <div className="transport">
       <div className="transport__controls">
         <button type="button" onClick={onToggle}>
-          {isPlaying ? 'Stop' : 'Play'}
+          {isPlaying ? transportText.stop : transportText.play}
         </button>
         <label>
-          Tempo
+          {transportText.tempo}
           <input
             type="range"
             min={40}
@@ -36,7 +41,9 @@ export default function Transport({
         </label>
       </div>
       <div className="transport__status">
-        <span>Bar {currentBar + 1}</span>
+        <span>
+          {transportText.bar} {currentBar + 1}
+        </span>
         <span>{preset.steps[currentBar % preset.steps.length].degree}</span>
       </div>
     </div>
