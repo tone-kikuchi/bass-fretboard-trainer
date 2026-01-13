@@ -4,7 +4,6 @@ import { CHORD_DEFINITIONS } from '../lib/music/chords';
 import { PROGRESSION_PRESETS } from '../lib/music/harmony';
 import { TUNING_PRESETS, type TuningPresetId } from '../lib/music/tuning';
 import {
-  LANGUAGE_LABELS,
   type Language,
   TEXT,
   getProgressionLabel,
@@ -26,7 +25,6 @@ export type SelectorProps = {
   onProgressionChange: (value: string) => void;
   onStringCountChange: (value: 4 | 5) => void;
   onTuningChange: (value: TuningPresetId) => void;
-  onLanguageChange: (value: Language) => void;
 };
 
 export default function SelectorKeyScaleChord({
@@ -43,22 +41,11 @@ export default function SelectorKeyScaleChord({
   onProgressionChange,
   onStringCountChange,
   onTuningChange,
-  onLanguageChange,
 }: SelectorProps) {
   const selectorText = TEXT[language].selector;
 
   return (
     <div className="selector">
-      <label>
-        {selectorText.language}
-        <select value={language} onChange={(event) => onLanguageChange(event.target.value as Language)}>
-          {Object.entries(LANGUAGE_LABELS).map(([value, label]) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </select>
-      </label>
       <label>
         {selectorText.strings}
         <select
