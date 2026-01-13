@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { buildFretboard } from '../../lib/music/fretboard';
+import { buildTuning } from '../../lib/music/tuning';
 import { degreeLabel, noteNumberToName } from '../../lib/music/notes';
 import { getScaleDefinition } from '../../lib/music/scales';
 import { useAppStore } from '../../store/appStore';
@@ -17,8 +18,11 @@ const emptyHighlights = {
 };
 
 export default function DegreeQuiz() {
-  const cells = useMemo(() => buildFretboard(24), []);
-  const { keyRoot, scaleId, layers, zoom } = useAppStore();
+  const { keyRoot, scaleId, layers, zoom, stringCount, tuningId } = useAppStore();
+  const cells = useMemo(
+    () => buildFretboard(24, buildTuning(stringCount, tuningId)),
+    [stringCount, tuningId],
+  );
   const recordResult = useStatsStore((state) => state.recordResult);
   const scale = getScaleDefinition(scaleId);
   const [degreeIndex, setDegreeIndex] = useState(() => Math.floor(Math.random() * scale.intervals.length));

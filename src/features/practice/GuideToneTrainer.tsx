@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { buildFretboard } from '../../lib/music/fretboard';
+import { buildTuning } from '../../lib/music/tuning';
 import { noteNumberToName } from '../../lib/music/notes';
 import { buildProgression, getGuideTones, PROGRESSION_PRESETS } from '../../lib/music/harmony';
 import FretboardGrid from '../../components/FretboardGrid';
@@ -9,8 +10,11 @@ import { useStatsStore } from '../../store/statsStore';
 const MODE_ID = 'guide-tone';
 
 export default function GuideToneTrainer() {
-  const cells = useMemo(() => buildFretboard(24), []);
-  const { keyRoot, progressionId, layers, zoom } = useAppStore();
+  const { keyRoot, progressionId, layers, zoom, stringCount, tuningId } = useAppStore();
+  const cells = useMemo(
+    () => buildFretboard(24, buildTuning(stringCount, tuningId)),
+    [stringCount, tuningId],
+  );
   const recordResult = useStatsStore((state) => state.recordResult);
   const preset = PROGRESSION_PRESETS.find((item) => item.id === progressionId) ?? PROGRESSION_PRESETS[0];
   const progression = buildProgression(keyRoot, preset);
