@@ -5,7 +5,6 @@ import { CHORD_DEFINITIONS } from '../../lib/music/chords';
 import { PROGRESSION_PRESETS } from '../../lib/music/harmony';
 import { TUNING_PRESETS, type TuningPresetId } from '../../lib/music/tuning';
 import {
-  LANGUAGE_LABELS,
   type Language,
   TEXT,
   getProgressionLabel,
@@ -27,7 +26,6 @@ export type FretboardSettingsProps = {
   onProgressionChange: (value: string) => void;
   onStringCountChange: (value: 4 | 5) => void;
   onTuningChange: (value: TuningPresetId) => void;
-  onLanguageChange: (value: Language) => void;
 };
 
 export default function FretboardSettings({
@@ -44,7 +42,6 @@ export default function FretboardSettings({
   onProgressionChange,
   onStringCountChange,
   onTuningChange,
-  onLanguageChange,
 }: FretboardSettingsProps) {
   const [isOpen, setIsOpen] = useState(false);
   const selectorText = TEXT[language].selector;
@@ -78,19 +75,6 @@ export default function FretboardSettings({
       </div>
       {isOpen ? (
         <div className="settings-accordion__content">
-          <label className="settings-field">
-            <span className="settings-field__label">{selectorText.language}</span>
-            <select
-              value={language}
-              onChange={(event) => onLanguageChange(event.target.value as Language)}
-            >
-              {Object.entries(LANGUAGE_LABELS).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </label>
           <label className="settings-field">
             <span className="settings-field__label">{selectorText.strings}</span>
             <select

@@ -13,10 +13,21 @@ import { buildFretboard } from './lib/music/fretboard';
 import { buildTuning, TUNING_PRESETS } from './lib/music/tuning';
 import { degreeLabel, intervalLabelFromRoot, noteNumberToName } from './lib/music/notes';
 import { getScaleDefinition } from './lib/music/scales';
-import { getChordTones, getGuideTones, buildProgression, PROGRESSION_PRESETS } from './lib/music/harmony';
+import {
+  buildProgression,
+  getChordTones,
+  getGuideTones,
+  PROGRESSION_PRESETS,
+} from './lib/music/harmony';
 import { useAppStore } from './store/appStore';
 import { useStatsStore } from './store/statsStore';
-import { TEXT, getScaleLabel, getTuningLabel } from './lib/i18n';
+import {
+  LANGUAGE_LABELS,
+  TEXT,
+  type Language,
+  getScaleLabel,
+  getTuningLabel,
+} from './lib/i18n';
 
 export default function App() {
   const {
@@ -153,7 +164,6 @@ export default function App() {
                 progressionId={progressionId}
                 stringCount={stringCount}
                 tuningId={tuningId}
-                onLanguageChange={setLanguage}
                 onKeyChange={setKeyRoot}
                 onScaleChange={setScaleId}
                 onChordChange={setChordId}
@@ -161,97 +171,97 @@ export default function App() {
                 onStringCountChange={setStringCount}
                 onTuningChange={setTuningId}
               />
-                <LayerToggles language={language} layers={layers} onToggle={setLayer} />
-                <div className="display-controls">
-                  <button type="button" className="reset-button" onClick={resetDisplay}>
-                    表示をリセット
-                  </button>
-                </div>
-                <div className="zoom">
-                  <label>
-                    {appText.zoom}
-                    <input
-                      type="range"
-                      min={0.8}
-                      max={1.4}
-                      step={0.05}
-                      value={zoom}
-                      onChange={(event) => setZoom(Number(event.target.value))}
-                    />
-                    <span>{Math.round(zoom * 100)}%</span>
-                  </label>
-                </div>
-                <div className="view-toggles">
-                  <label className="toggle">
-                    <input
-                      type="checkbox"
-                      checked={isLandscape}
-                      onChange={(event) => setLandscape(event.target.checked)}
-                    />
-                    横向き表示
-                  </label>
-                </div>
-                <FretboardGrid
-                  cells={cells}
-                  layers={layers}
-                  highlights={highlights}
-                  zoom={zoom}
-                  isLandscape={isLandscape}
-                />
-                <div className="legend">
-                  <span>
-                    {appText.legend.key}: {noteNumberToName(keyRoot)}
-                  </span>
-                  <span>
-                    {appText.legend.scale}: {scaleLabel}
-                  </span>
-                  <span>
-                    {appText.legend.tuning}: {tuningLabel}
-                  </span>
-                </div>
-                <div className="scale-info">
-                  <div className="scale-playback">
-                    <div>
-                      <h3>スケール再生</h3>
-                      <p className="scale-playback__hint">
-                        キーとスケールを選んで、ドレミファソラシドのように順番で再生できます。
-                      </p>
-                    </div>
-                    <ScalePlayback keyRoot={keyRoot} scale={scale} />
-                  </div>
+              <LayerToggles language={language} layers={layers} onToggle={setLayer} />
+              <div className="display-controls">
+                <button type="button" className="reset-button" onClick={resetDisplay}>
+                  表示をリセット
+                </button>
+              </div>
+              <div className="zoom">
+                <label>
+                  {appText.zoom}
+                  <input
+                    type="range"
+                    min={0.8}
+                    max={1.4}
+                    step={0.05}
+                    value={zoom}
+                    onChange={(event) => setZoom(Number(event.target.value))}
+                  />
+                  <span>{Math.round(zoom * 100)}%</span>
+                </label>
+              </div>
+              <div className="view-toggles">
+                <label className="toggle">
+                  <input
+                    type="checkbox"
+                    checked={isLandscape}
+                    onChange={(event) => setLandscape(event.target.checked)}
+                  />
+                  横向き表示
+                </label>
+              </div>
+              <FretboardGrid
+                cells={cells}
+                layers={layers}
+                highlights={highlights}
+                zoom={zoom}
+                isLandscape={isLandscape}
+              />
+              <div className="legend">
+                <span>
+                  {appText.legend.key}: {noteNumberToName(keyRoot)}
+                </span>
+                <span>
+                  {appText.legend.scale}: {scaleLabel}
+                </span>
+                <span>
+                  {appText.legend.tuning}: {tuningLabel}
+                </span>
+              </div>
+              <div className="scale-info">
+                <div className="scale-playback">
                   <div>
-                    <h3>
-                      {noteNumberToName(keyRoot)} {scaleLabel} {appText.scaleInfo.notes}
-                    </h3>
-                    <div className="scale-info__notes">
-                      {scaleNoteNames.map((note, index) => (
-                        <span key={`${note}-${index}`} className="scale-info__note">
-                          {note}
-                        </span>
-                      ))}
-                    </div>
+                    <h3>スケール再生</h3>
+                    <p className="scale-playback__hint">
+                      キーとスケールを選んで、ドレミファソラシドのように順番で再生できます。
+                    </p>
                   </div>
-                  <div>
-                    <h3>{appText.scaleInfo.fretboard}</h3>
-                    <div className="scale-info__strings">
-                      {stringScaleNotes.map((string) => (
-                        <div key={string.stringName} className="scale-info__string">
-                          <span className="scale-info__string-name">{string.stringName}</span>
-                          <div className="scale-info__string-notes">
-                            {string.notes.map((note) => (
-                              <span
-                                key={`${string.stringName}-${note.fret}`}
-                                className="scale-info__fret-note"
-                              >
-                                {note.fret}:{note.noteName}
-                              </span>
-                            ))}
-                          </div>
+                  <ScalePlayback keyRoot={keyRoot} scale={scale} />
+                </div>
+                <div>
+                  <h3>
+                    {noteNumberToName(keyRoot)} {scaleLabel} {appText.scaleInfo.notes}
+                  </h3>
+                  <div className="scale-info__notes">
+                    {scaleNoteNames.map((note, index) => (
+                      <span key={`${note}-${index}`} className="scale-info__note">
+                        {note}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h3>{appText.scaleInfo.fretboard}</h3>
+                  <div className="scale-info__strings">
+                    {stringScaleNotes.map((string) => (
+                      <div key={string.stringName} className="scale-info__string">
+                        <span className="scale-info__string-name">{string.stringName}</span>
+                        <div className="scale-info__string-notes">
+                          {string.notes.map((note) => (
+                            <span
+                              key={`${string.stringName}-${note.fret}`}
+                              className="scale-info__fret-note"
+                            >
+                              {note.fret}:{note.noteName}
+                            </span>
+                          ))}
                         </div>
-                      ))}
-                    </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
+              </div>
             </section>
           }
         />
@@ -277,7 +287,6 @@ export default function App() {
                 progressionId={progressionId}
                 stringCount={stringCount}
                 tuningId={tuningId}
-                onLanguageChange={setLanguage}
                 onKeyChange={setKeyRoot}
                 onScaleChange={setScaleId}
                 onChordChange={setChordId}
@@ -346,6 +355,21 @@ export default function App() {
             <section className="page">
               <h2 className="page__title">{appText.pages.help}</h2>
               <div className="help">
+                <div className="selector help__language">
+                  <label>
+                    言語/Language
+                    <select
+                      value={language}
+                      onChange={(event) => setLanguage(event.target.value as Language)}
+                    >
+                      {Object.entries(LANGUAGE_LABELS).map(([value, label]) => (
+                        <option key={value} value={value}>
+                          {label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
                 <h3>{appText.help.minimalRules}</h3>
                 <ul>
                   {appText.help.mottos.map((line) => (

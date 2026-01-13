@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { playNote } from '../lib/audio/playNote';
 import { noteNumberToName } from '../lib/music/notes';
 import type { FretboardCell } from '../lib/music/fretboard';
@@ -34,6 +35,7 @@ export default function FretboardGrid({
   isLandscape = false,
   onCellClick,
 }: FretboardGridProps) {
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
   const maxFret = cells.reduce((max, cell) => Math.max(max, cell.fret), 0);
   const frets = Array.from({ length: maxFret + 1 }, (_, index) => index);
   const stringsMap = new Map<
@@ -58,8 +60,13 @@ export default function FretboardGrid({
     .map(([, data]) => data);
   const middleStringIndex = Math.floor((strings.length - 1) / 2);
 
+  useEffect(() => {
+    wrapperRef.current?.scrollTo({ left: 0, top: 0 });
+  }, [isLandscape]);
+
   return (
     <div
+      ref={wrapperRef}
       className={`fretboard__wrapper${isLandscape ? ' fretboard__wrapper--landscape' : ''}`}
     >
       <div className={`fretboard__frame${isLandscape ? ' fretboard__frame--landscape' : ''}`}>
