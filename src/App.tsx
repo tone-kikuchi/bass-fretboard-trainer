@@ -1,5 +1,6 @@
-import { NavLink, Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { useMemo, useState, useEffect } from 'react';
+import AppShell from './components/AppShell';
 import FretboardGrid from './components/FretboardGrid';
 import LayerToggles from './components/LayerToggles';
 import SelectorKeyScaleChord from './components/SelectorKeyScaleChord';
@@ -7,6 +8,7 @@ import ScalePlayback from './components/ScalePlayback';
 import Transport from './components/Transport';
 import StatsView from './components/StatsView';
 import PracticeDashboard from './features/practice/PracticeDashboard';
+import FretboardSettings from './features/fretboard/FretboardSettings';
 import { buildFretboard } from './lib/music/fretboard';
 import { buildTuning, TUNING_PRESETS } from './lib/music/tuning';
 import { degreeLabel, intervalLabelFromRoot, noteNumberToName } from './lib/music/notes';
@@ -41,6 +43,7 @@ export default function App() {
     setLanguage,
   } = useAppStore();
   const appText = TEXT[language].app;
+  const location = useLocation();
   const tuning = useMemo(() => buildTuning(stringCount, tuningId), [stringCount, tuningId]);
   const cells = useMemo(() => buildFretboard(24, tuning), [tuning]);
   const tuningPreset =
@@ -94,6 +97,21 @@ export default function App() {
   const [tempo, setTempo] = useState(120);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentBar, setCurrentBar] = useState(0);
+  const pageName = useMemo(() => {
+    if (location.pathname.startsWith('/practice')) {
+      return appText.pages.practice;
+    }
+    if (location.pathname.startsWith('/progression')) {
+      return appText.pages.progression;
+    }
+    if (location.pathname.startsWith('/stats')) {
+      return appText.pages.stats;
+    }
+    if (location.pathname.startsWith('/help')) {
+      return appText.pages.help;
+    }
+    return appText.pages.fretboard;
+  }, [appText.pages, location.pathname]);
 
   useEffect(() => {
     if (!isPlaying) {
@@ -120,46 +138,29 @@ export default function App() {
   };
 
   return (
-    <div className="app">
-      <header className="app__header">
-        <div>
-          <h1>{appText.title}</h1>
-          <p className="app__subtitle">{appText.subtitle}</p>
-        </div>
-        <nav>
-          <NavLink to="/" end>
-            {appText.nav.fretboard}
-          </NavLink>
-          <NavLink to="/practice">{appText.nav.practice}</NavLink>
-          <NavLink to="/progression">{appText.nav.progression}</NavLink>
-          <NavLink to="/stats">{appText.nav.stats}</NavLink>
-          <NavLink to="/help">{appText.nav.help}</NavLink>
-        </nav>
-      </header>
-
-      <main>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <section className="page">
-                <h2>{appText.pages.fretboard}</h2>
-                <SelectorKeyScaleChord
-                  language={language}
-                  keyRoot={keyRoot}
-                  scaleId={scaleId}
-                  chordId={chordId}
-                  progressionId={progressionId}
-                  stringCount={stringCount}
-                  tuningId={tuningId}
-                  onLanguageChange={setLanguage}
-                  onKeyChange={setKeyRoot}
-                  onScaleChange={setScaleId}
-                  onChordChange={setChordId}
-                  onProgressionChange={setProgressionId}
-                  onStringCountChange={setStringCount}
-                  onTuningChange={setTuningId}
-                />
+    <AppShell appName={appText.title} pageName={pageName}>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <section className="page">
+              <h2 className="page__title">{appText.pages.fretboard}</h2>
+              <FretboardSettings
+                language={language}
+                keyRoot={keyRoot}
+                scaleId={scaleId}
+                chordId={chordId}
+                progressionId={progressionId}
+                stringCount={stringCount}
+                tuningId={tuningId}
+                onLanguageChange={setLanguage}
+                onKeyChange={setKeyRoot}
+                onScaleChange={setScaleId}
+                onChordChange={setChordId}
+                onProgressionChange={setProgressionId}
+                onStringCountChange={setStringCount}
+                onTuningChange={setTuningId}
+              />
                 <LayerToggles language={language} layers={layers} onToggle={setLayer} />
                 <div className="display-controls">
                   <button type="button" className="reset-button" onClick={resetDisplay}>
@@ -251,124 +252,123 @@ export default function App() {
                     </div>
                   </div>
                 </div>
-              </section>
-            }
-          />
-          <Route
-            path="/practice"
-            element={
-              <section className="page">
-                <h2>{appText.pages.practice}</h2>
-                <PracticeDashboard language={language} />
-              </section>
-            }
-          />
-          <Route
-            path="/progression"
-            element={
-              <section className="page">
-                <h2>{appText.pages.progression}</h2>
-                <SelectorKeyScaleChord
-                  language={language}
-                  keyRoot={keyRoot}
-                  scaleId={scaleId}
-                  chordId={chordId}
-                  progressionId={progressionId}
-                  stringCount={stringCount}
-                  tuningId={tuningId}
-                  onLanguageChange={setLanguage}
-                  onKeyChange={setKeyRoot}
-                  onScaleChange={setScaleId}
-                  onChordChange={setChordId}
-                  onProgressionChange={setProgressionId}
-                  onStringCountChange={setStringCount}
-                  onTuningChange={setTuningId}
-                />
-                <LayerToggles language={language} layers={layers} onToggle={setLayer} />
-                <div className="display-controls">
-                  <button type="button" className="reset-button" onClick={resetDisplay}>
-                    表示をリセット
-                  </button>
-                </div>
-                <Transport
-                  language={language}
-                  tempo={tempo}
-                  isPlaying={isPlaying}
-                  currentBar={currentBar}
-                  preset={preset}
-                  onTempoChange={setTempo}
-                  onToggle={() => setIsPlaying((value) => !value)}
-                />
-                <div className="view-toggles">
-                  <label className="toggle">
-                    <input
-                      type="checkbox"
-                      checked={isLandscape}
-                      onChange={(event) => setLandscape(event.target.checked)}
-                    />
-                    横向き表示
-                  </label>
-                </div>
-                <div className="progression">
-                  {progression.map((step, index) => (
-                    <div
-                      key={`${step.degree}-${index}`}
-                      className={index === currentBar ? 'progression__step active' : 'progression__step'}
-                    >
-                      <div>{step.degree}</div>
-                      <strong>{step.chordName}</strong>
-                    </div>
+            </section>
+          }
+        />
+        <Route
+          path="/practice"
+          element={
+            <section className="page">
+              <h2 className="page__title">{appText.pages.practice}</h2>
+              <PracticeDashboard language={language} />
+            </section>
+          }
+        />
+        <Route
+          path="/progression"
+          element={
+            <section className="page">
+              <h2 className="page__title">{appText.pages.progression}</h2>
+              <SelectorKeyScaleChord
+                language={language}
+                keyRoot={keyRoot}
+                scaleId={scaleId}
+                chordId={chordId}
+                progressionId={progressionId}
+                stringCount={stringCount}
+                tuningId={tuningId}
+                onLanguageChange={setLanguage}
+                onKeyChange={setKeyRoot}
+                onScaleChange={setScaleId}
+                onChordChange={setChordId}
+                onProgressionChange={setProgressionId}
+                onStringCountChange={setStringCount}
+                onTuningChange={setTuningId}
+              />
+              <LayerToggles language={language} layers={layers} onToggle={setLayer} />
+              <div className="display-controls">
+                <button type="button" className="reset-button" onClick={resetDisplay}>
+                  表示をリセット
+                </button>
+              </div>
+              <Transport
+                language={language}
+                tempo={tempo}
+                isPlaying={isPlaying}
+                currentBar={currentBar}
+                preset={preset}
+                onTempoChange={setTempo}
+                onToggle={() => setIsPlaying((value) => !value)}
+              />
+              <div className="view-toggles">
+                <label className="toggle">
+                  <input
+                    type="checkbox"
+                    checked={isLandscape}
+                    onChange={(event) => setLandscape(event.target.checked)}
+                  />
+                  横向き表示
+                </label>
+              </div>
+              <div className="progression">
+                {progression.map((step, index) => (
+                  <div
+                    key={`${step.degree}-${index}`}
+                    className={index === currentBar ? 'progression__step active' : 'progression__step'}
+                  >
+                    <div>{step.degree}</div>
+                    <strong>{step.chordName}</strong>
+                  </div>
+                ))}
+              </div>
+              <FretboardGrid
+                cells={cells}
+                layers={layers}
+                highlights={progressionHighlights}
+                zoom={zoom}
+                isLandscape={isLandscape}
+              />
+            </section>
+          }
+        />
+        <Route
+          path="/stats"
+          element={
+            <section className="page">
+              <h2 className="page__title">{appText.pages.stats}</h2>
+              <StatsView language={language} stats={stats} onReset={resetStats} />
+            </section>
+          }
+        />
+        <Route
+          path="/help"
+          element={
+            <section className="page">
+              <h2 className="page__title">{appText.pages.help}</h2>
+              <div className="help">
+                <h3>{appText.help.minimalRules}</h3>
+                <ul>
+                  {appText.help.mottos.map((line) => (
+                    <li key={line}>{line}</li>
                   ))}
-                </div>
-                <FretboardGrid
-                  cells={cells}
-                  layers={layers}
-                  highlights={progressionHighlights}
-                  zoom={zoom}
-                  isLandscape={isLandscape}
-                />
-              </section>
-            }
-          />
-          <Route
-            path="/stats"
-            element={
-              <section className="page">
-                <h2>{appText.pages.stats}</h2>
-                <StatsView language={language} stats={stats} onReset={resetStats} />
-              </section>
-            }
-          />
-          <Route
-            path="/help"
-            element={
-              <section className="page">
-                <h2>{appText.pages.help}</h2>
-                <div className="help">
-                  <h3>{appText.help.minimalRules}</h3>
-                  <ul>
-                    {appText.help.mottos.map((line) => (
-                      <li key={line}>{line}</li>
-                    ))}
-                  </ul>
-                  <h3>{appText.help.usage}</h3>
-                  <ul>
-                    {appText.help.usageItems.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                  <h3>{appText.help.features}</h3>
-                  <ul>
-                    {appText.help.featureItems.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              </section>
-            }
-          />
-        </Routes>
-      </main>
-    </div>
+                </ul>
+                <h3>{appText.help.usage}</h3>
+                <ul>
+                  {appText.help.usageItems.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+                <h3>{appText.help.features}</h3>
+                <ul>
+                  {appText.help.featureItems.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </section>
+          }
+        />
+      </Routes>
+    </AppShell>
   );
 }
