@@ -160,7 +160,7 @@ export default function App() {
                   onStringCountChange={setStringCount}
                   onTuningChange={setTuningId}
                 />
-                <LayerToggles layers={layers} onToggle={setLayer} />
+                <LayerToggles language={language} layers={layers} onToggle={setLayer} />
                 <div className="display-controls">
                   <button type="button" className="reset-button" onClick={resetDisplay}>
                     表示をリセット
@@ -285,7 +285,7 @@ export default function App() {
                   onStringCountChange={setStringCount}
                   onTuningChange={setTuningId}
                 />
-                <LayerToggles layers={layers} onToggle={setLayer} />
+                <LayerToggles language={language} layers={layers} onToggle={setLayer} />
                 <div className="display-controls">
                   <button type="button" className="reset-button" onClick={resetDisplay}>
                     表示をリセット
