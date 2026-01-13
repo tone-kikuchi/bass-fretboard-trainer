@@ -35,6 +35,7 @@ export default function App() {
     setTuningId,
     setZoom,
     setLayer,
+    resetDisplay,
     setLanguage,
   } = useAppStore();
   const appText = TEXT[language].app;
@@ -157,6 +158,12 @@ export default function App() {
                   onStringCountChange={setStringCount}
                   onTuningChange={setTuningId}
                 />
+                <LayerToggles layers={layers} onToggle={setLayer} />
+                <div className="display-controls">
+                  <button type="button" className="reset-button" onClick={resetDisplay}>
+                    表示をリセット
+                  </button>
+                </div>
                 <LayerToggles language={language} layers={layers} onToggle={setLayer} />
                 <div className="zoom">
                   <label>
@@ -260,6 +267,12 @@ export default function App() {
                   onStringCountChange={setStringCount}
                   onTuningChange={setTuningId}
                 />
+                <LayerToggles layers={layers} onToggle={setLayer} />
+                <div className="display-controls">
+                  <button type="button" className="reset-button" onClick={resetDisplay}>
+                    表示をリセット
+                  </button>
+                </div>
                 <LayerToggles language={language} layers={layers} onToggle={setLayer} />
                 <Transport
                   language={language}
