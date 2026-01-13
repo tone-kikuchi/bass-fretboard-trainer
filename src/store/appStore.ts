@@ -11,6 +11,18 @@ export type LayerSettings = {
   showGuide: boolean;
 };
 
+const DEFAULT_LAYERS: LayerSettings = {
+  showNoteNames: true,
+  showRoot: true,
+  showDegrees: false,
+  showIntervals: false,
+  showScale: true,
+  showChord: true,
+  showGuide: true,
+};
+
+const DEFAULT_ZOOM = 1;
+
 export type AppState = {
   keyRoot: number;
   scaleId: string;
@@ -28,6 +40,7 @@ export type AppState = {
   setTuningId: (tuningId: TuningPresetId) => void;
   setZoom: (zoom: number) => void;
   setLayer: (layer: keyof LayerSettings, value: boolean) => void;
+  resetDisplay: () => void;
 };
 
 export const useAppStore = create<AppState>((set) => ({
@@ -37,16 +50,8 @@ export const useAppStore = create<AppState>((set) => ({
   progressionId: 'ii-v-i',
   stringCount: 4,
   tuningId: 'standard',
-  zoom: 1,
-  layers: {
-    showNoteNames: true,
-    showRoot: true,
-    showDegrees: false,
-    showIntervals: false,
-    showScale: true,
-    showChord: true,
-    showGuide: true,
-  },
+  zoom: DEFAULT_ZOOM,
+  layers: { ...DEFAULT_LAYERS },
   setKeyRoot: (keyRoot) => set({ keyRoot }),
   setScaleId: (scaleId) => set({ scaleId }),
   setChordId: (chordId) => set({ chordId }),
@@ -61,4 +66,5 @@ export const useAppStore = create<AppState>((set) => ({
         [layer]: value,
       },
     })),
+  resetDisplay: () => set({ zoom: DEFAULT_ZOOM, layers: { ...DEFAULT_LAYERS } }),
 }));

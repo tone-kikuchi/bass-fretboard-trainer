@@ -38,6 +38,7 @@ export default function App() {
     setTuningId,
     setZoom,
     setLayer,
+    resetDisplay,
   } = useAppStore();
   const tuning = useMemo(() => buildTuning(stringCount, tuningId), [stringCount, tuningId]);
   const cells = useMemo(() => buildFretboard(24, tuning), [tuning]);
@@ -155,6 +156,11 @@ export default function App() {
                   onTuningChange={setTuningId}
                 />
                 <LayerToggles layers={layers} onToggle={setLayer} />
+                <div className="display-controls">
+                  <button type="button" className="reset-button" onClick={resetDisplay}>
+                    表示をリセット
+                  </button>
+                </div>
                 <div className="zoom">
                   <label>
                     Zoom
@@ -241,6 +247,11 @@ export default function App() {
                   onTuningChange={setTuningId}
                 />
                 <LayerToggles layers={layers} onToggle={setLayer} />
+                <div className="display-controls">
+                  <button type="button" className="reset-button" onClick={resetDisplay}>
+                    表示をリセット
+                  </button>
+                </div>
                 <Transport
                   tempo={tempo}
                   isPlaying={isPlaying}
