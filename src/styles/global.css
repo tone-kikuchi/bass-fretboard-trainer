@@ -105,27 +105,64 @@ main {
 }
 
 .fretboard {
-  display: grid;
-  grid-template-columns: repeat(25, minmax(48px, 1fr));
-  gap: 0.2rem;
-  background: #0b1120;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  background: linear-gradient(120deg, #1b1b1b, #232323 45%, #2b2b2b 90%);
   padding: 1rem;
   border-radius: 1rem;
+  border: 1px solid #111827;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
   transform-origin: top left;
 }
 
+.fretboard__numbers,
+.fretboard__row {
+  display: grid;
+  grid-template-columns: 72px repeat(25, minmax(46px, 1fr));
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.fretboard__corner {
+  font-weight: 600;
+  color: #e5e7eb;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.fretboard__number {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #cbd5f5;
+}
+
+.fretboard__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.fretboard__string-label {
+  text-align: right;
+  padding-right: 0.6rem;
+  font-weight: 600;
+  color: #93c5fd;
+}
+
 .fretboard__cell {
-  background: #111827;
-  border: 1px solid #1f2937;
+  background: linear-gradient(180deg, #2f2f2f, #1f1f1f);
+  border: 1px solid rgba(148, 163, 184, 0.2);
   color: inherit;
   min-height: 64px;
-  padding: 0.4rem;
+  padding: 0.35rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
-  border-radius: 0.6rem;
+  border-radius: 0.4rem;
+  box-shadow: inset -2px 0 0 rgba(255, 255, 255, 0.08);
 }
 
 .fretboard__cell--scale {
@@ -143,6 +180,30 @@ main {
 .fretboard__cell--target {
   outline: 2px dashed #f87171;
   outline-offset: -4px;
+}
+
+.fretboard__cell--inlay::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(226, 232, 240, 0.6);
+  position: absolute;
+  bottom: 6px;
+}
+
+.fretboard__cell--double::after {
+  content: '';
+  width: 16px;
+  height: 10px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(226, 232, 240, 0.7) 45%, transparent 50%),
+    radial-gradient(circle, rgba(226, 232, 240, 0.7) 45%, transparent 50%);
+  background-size: 8px 8px;
+  background-position: left center, right center;
+  background-repeat: no-repeat;
+  position: absolute;
+  bottom: 6px;
 }
 
 .fretboard__note {
