@@ -83,6 +83,7 @@ export default function FretboardGrid({
                 const isRoot = hasNote(highlights.rootNotes, cell.noteNumber);
                 const isInlay = INLAY_FRETS.has(cell.fret);
                 const isDoubleInlay = DOUBLE_INLAY_FRETS.has(cell.fret);
+                const isNut = cell.fret === 0;
                 const showPositionNumber =
                   isInlay &&
                   stringIndex === middleStringIndex &&
@@ -98,6 +99,7 @@ export default function FretboardGrid({
                       `${isGuide ? ' fretboard__cell--guide' : ''}` +
                       `${isTarget ? ' fretboard__cell--target' : ''}` +
                       `${isRoot ? ' fretboard__cell--root' : ''}` +
+                      `${isNut ? ' fretboard__cell--nut' : ''}` +
                       `${isInlay ? ' fretboard__cell--inlay' : ''}` +
                       `${isDoubleInlay ? ' fretboard__cell--double' : ''}`
                     }
