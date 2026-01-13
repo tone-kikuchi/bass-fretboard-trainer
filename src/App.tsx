@@ -166,7 +166,6 @@ export default function App() {
                     表示をリセット
                   </button>
                 </div>
-                <LayerToggles language={language} layers={layers} onToggle={setLayer} />
                 <div className="zoom">
                   <label>
                     {appText.zoom}
@@ -291,7 +290,6 @@ export default function App() {
                     表示をリセット
                   </button>
                 </div>
-                <LayerToggles language={language} layers={layers} onToggle={setLayer} />
                 <Transport
                   language={language}
                   tempo={tempo}

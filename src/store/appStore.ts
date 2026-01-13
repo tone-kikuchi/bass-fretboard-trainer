@@ -15,11 +15,11 @@ export type LayerSettings = {
 const DEFAULT_LAYERS: LayerSettings = {
   showNoteNames: true,
   showRoot: true,
-  showDegrees: false,
+  showDegrees: true,
   showIntervals: false,
   showScale: true,
-  showChord: true,
-  showGuide: true,
+  showChord: false,
+  showGuide: false,
 };
 
 const DEFAULT_ZOOM = 1;
@@ -57,18 +57,8 @@ export const useAppStore = create<AppState>((set) => ({
   stringCount: 4,
   tuningId: 'standard',
   zoom: DEFAULT_ZOOM,
-  layers: { ...DEFAULT_LAYERS },
-  zoom: 1,
   isLandscape: false,
-  layers: {
-    showNoteNames: true,
-    showRoot: true,
-    showDegrees: true,
-    showIntervals: false,
-    showScale: true,
-    showChord: true,
-    showGuide: true,
-  },
+  layers: { ...DEFAULT_LAYERS },
   setLanguage: (language) => set({ language }),
   setKeyRoot: (keyRoot) => set({ keyRoot }),
   setScaleId: (scaleId) => set({ scaleId }),
