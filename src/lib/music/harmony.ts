@@ -29,6 +29,7 @@ const MINOR_DEGREE_MAP: Record<string, number> = {
   III: 3,
   iv: 5,
   v: 7,
+  V: 7,
   VI: 8,
   VII: 10,
 };
