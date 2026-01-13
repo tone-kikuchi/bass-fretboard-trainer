@@ -3,6 +3,7 @@ import { useMemo, useState, useEffect } from 'react';
 import FretboardGrid from './components/FretboardGrid';
 import LayerToggles from './components/LayerToggles';
 import SelectorKeyScaleChord from './components/SelectorKeyScaleChord';
+import ScalePlayback from './components/ScalePlayback';
 import Transport from './components/Transport';
 import StatsView from './components/StatsView';
 import PracticeDashboard from './features/practice/PracticeDashboard';
@@ -176,6 +177,15 @@ export default function App() {
                   <span>Tuning: {tuningLabel}</span>
                 </div>
                 <div className="scale-info">
+                  <div className="scale-playback">
+                    <div>
+                      <h3>スケール再生</h3>
+                      <p className="scale-playback__hint">
+                        キーとスケールを選んで、ドレミファソラシドのように順番で再生できます。
+                      </p>
+                    </div>
+                    <ScalePlayback keyRoot={keyRoot} scale={scale} />
+                  </div>
                   <div>
                     <h3>
                       {noteNumberToName(keyRoot)} {scale.name} の音列
