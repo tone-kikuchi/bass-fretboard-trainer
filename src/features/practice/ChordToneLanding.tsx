@@ -11,8 +11,8 @@ import { TEXT } from '../../lib/i18n';
 const MODE_ID = 'chord-landing';
 
 export default function ChordToneLanding() {
-  const { keyRoot, chordId, layers, zoom, stringCount, tuningId, isLandscape } = useAppStore();
-  const { language, keyRoot, chordId, layers, zoom, stringCount, tuningId } = useAppStore();
+  const { language, keyRoot, chordId, layers, zoom, stringCount, tuningId, isLandscape } =
+    useAppStore();
   const cells = useMemo(
     () => buildFretboard(24, buildTuning(stringCount, tuningId)),
     [stringCount, tuningId],
