@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { buildFretboard } from '../../lib/music/fretboard';
 import { buildTuning } from '../../lib/music/tuning';
-import { degreeLabel, noteNumberToName } from '../../lib/music/notes';
 import { degreeLabel, intervalLabelFromRoot, noteNumberToName } from '../../lib/music/notes';
 import { getScaleDefinition } from '../../lib/music/scales';
 import { useAppStore } from '../../store/appStore';

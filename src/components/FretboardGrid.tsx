@@ -53,58 +53,9 @@ export default function FretboardGrid({
   const strings = Array.from(stringsMap.entries())
     .sort(([a], [b]) => b - a)
     .map(([, data]) => data);
+  const middleStringIndex = Math.floor((strings.length - 1) / 2);
 
   return (
-    <div className="fretboard" style={{ transform: `scale(${zoom})` }}>
-      <div className="fretboard__numbers">
-        <div className="fretboard__corner">Fret</div>
-        {frets.map((fret) => (
-          <div key={`fret-${fret}`} className="fretboard__number">
-            {fret}
-          </div>
-        ))}
-      </div>
-      <div className="fretboard__rows">
-        {strings.map((stringData, stringIndex) => (
-          <div key={stringData.name} className="fretboard__row">
-            <div className="fretboard__string-label">{stringIndex + 1}</div>
-            {frets.map((fret) => {
-              const cell = stringData.cellsByFret.get(fret);
-              if (!cell) {
-                return <div key={`${stringData.name}-${fret}`} className="fretboard__cell" />;
-              }
-              const isScale = hasNote(highlights.scaleNotes, cell.noteNumber);
-              const isChord = hasNote(highlights.chordTones, cell.noteNumber);
-              const isGuide = hasNote(highlights.guideTones, cell.noteNumber);
-              const isTarget = hasNote(highlights.targetNotes, cell.noteNumber);
-              const isInlay = INLAY_FRETS.has(cell.fret);
-              const isDoubleInlay = DOUBLE_INLAY_FRETS.has(cell.fret);
-              return (
-                <button
-                  key={`${cell.stringIndex}-${cell.fret}`}
-                  className={
-                    `fretboard__cell` +
-                    `${isScale ? ' fretboard__cell--scale' : ''}` +
-                    `${isChord ? ' fretboard__cell--chord' : ''}` +
-                    `${isGuide ? ' fretboard__cell--guide' : ''}` +
-                    `${isTarget ? ' fretboard__cell--target' : ''}` +
-                    `${isInlay ? ' fretboard__cell--inlay' : ''}` +
-                    `${isDoubleInlay ? ' fretboard__cell--double' : ''}`
-                  }
-                  onClick={() => onCellClick?.(cell)}
-                  type="button"
-                >
-                  <div className="fretboard__note">
-                    {layers.showNoteNames && noteNumberToName(cell.noteNumber)}
-                  </div>
-                  <div className="fretboard__degree">
-                    {layers.showDegrees && highlights.degreeMap.get(cell.noteNumber)}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        ))}
     <div className="fretboard__wrapper">
       <div className="fretboard" style={{ transform: `scale(${zoom})` }}>
         <div className="fretboard__numbers">
@@ -116,7 +67,7 @@ export default function FretboardGrid({
           ))}
         </div>
         <div className="fretboard__rows">
-          {strings.map((stringData) => (
+          {strings.map((stringData, stringIndex) => (
             <div key={stringData.name} className="fretboard__row">
               <div className="fretboard__string-label">{stringData.name}</div>
               {frets.map((fret) => {
@@ -131,6 +82,7 @@ export default function FretboardGrid({
                 const isRoot = hasNote(highlights.rootNotes, cell.noteNumber);
                 const isInlay = INLAY_FRETS.has(cell.fret);
                 const isDoubleInlay = DOUBLE_INLAY_FRETS.has(cell.fret);
+                const showPositionNumber = isInlay && stringIndex === middleStringIndex;
                 return (
                   <button
                     key={`${cell.stringIndex}-${cell.fret}`}
@@ -157,6 +109,9 @@ export default function FretboardGrid({
                       {layers.showIntervals && highlights.intervalMap.get(cell.noteNumber)}
                     </div>
                     {layers.showRoot && isRoot && <div className="fretboard__root">ROOT</div>}
+                    {showPositionNumber && (
+                      <div className="fretboard__position-number">{fret}</div>
+                    )}
                   </button>
                 );
               })}
