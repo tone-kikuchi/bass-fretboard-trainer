@@ -6,6 +6,7 @@ export default defineConfig({
   base: '/bass-fretboard-trainer/',
   test: {
     environment: "jsdom",
+    globals: true,
     setupFiles: "./src/test/setup.ts",
   },
 });
