@@ -29,6 +29,7 @@ export default function App() {
     stringCount,
     tuningId,
     zoom,
+    isLandscape,
     layers,
     setKeyRoot,
     setScaleId,
@@ -37,6 +38,7 @@ export default function App() {
     setStringCount,
     setTuningId,
     setZoom,
+    setLandscape,
     setLayer,
   } = useAppStore();
   const tuning = useMemo(() => buildTuning(stringCount, tuningId), [stringCount, tuningId]);
@@ -169,7 +171,23 @@ export default function App() {
                     <span>{Math.round(zoom * 100)}%</span>
                   </label>
                 </div>
-                <FretboardGrid cells={cells} layers={layers} highlights={highlights} zoom={zoom} />
+                <div className="view-toggles">
+                  <label className="toggle">
+                    <input
+                      type="checkbox"
+                      checked={isLandscape}
+                      onChange={(event) => setLandscape(event.target.checked)}
+                    />
+                    横向き表示
+                  </label>
+                </div>
+                <FretboardGrid
+                  cells={cells}
+                  layers={layers}
+                  highlights={highlights}
+                  zoom={zoom}
+                  isLandscape={isLandscape}
+                />
                 <div className="legend">
                   <span>Key: {noteNumberToName(keyRoot)}</span>
                   <span>Scale: {scale.name}</span>
@@ -249,6 +267,16 @@ export default function App() {
                   onTempoChange={setTempo}
                   onToggle={() => setIsPlaying((value) => !value)}
                 />
+                <div className="view-toggles">
+                  <label className="toggle">
+                    <input
+                      type="checkbox"
+                      checked={isLandscape}
+                      onChange={(event) => setLandscape(event.target.checked)}
+                    />
+                    横向き表示
+                  </label>
+                </div>
                 <div className="progression">
                   {progression.map((step, index) => (
                     <div
@@ -265,6 +293,7 @@ export default function App() {
                   layers={layers}
                   highlights={progressionHighlights}
                   zoom={zoom}
+                  isLandscape={isLandscape}
                 />
               </section>
             }

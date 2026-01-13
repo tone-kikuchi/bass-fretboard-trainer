@@ -10,7 +10,7 @@ import { useStatsStore } from '../../store/statsStore';
 const MODE_ID = 'chord-landing';
 
 export default function ChordToneLanding() {
-  const { keyRoot, chordId, layers, zoom, stringCount, tuningId } = useAppStore();
+  const { keyRoot, chordId, layers, zoom, stringCount, tuningId, isLandscape } = useAppStore();
   const cells = useMemo(
     () => buildFretboard(24, buildTuning(stringCount, tuningId)),
     [stringCount, tuningId],
@@ -68,6 +68,7 @@ export default function ChordToneLanding() {
         layers={layers}
         highlights={highlights}
         zoom={zoom}
+        isLandscape={isLandscape}
         onCellClick={handleClick}
       />
     </div>

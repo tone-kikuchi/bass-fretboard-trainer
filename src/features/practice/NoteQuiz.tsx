@@ -9,7 +9,7 @@ import { useStatsStore } from '../../store/statsStore';
 const MODE_ID = 'note-quiz';
 
 export default function NoteQuiz() {
-  const { layers, zoom, stringCount, tuningId } = useAppStore();
+  const { layers, zoom, stringCount, tuningId, isLandscape } = useAppStore();
   const cells = useMemo(
     () => buildFretboard(24, buildTuning(stringCount, tuningId)),
     [stringCount, tuningId],
@@ -46,6 +46,7 @@ export default function NoteQuiz() {
           intervalMap: new Map<number, string>(),
         }}
         zoom={zoom}
+        isLandscape={isLandscape}
         onCellClick={handleClick}
       />
     </div>
