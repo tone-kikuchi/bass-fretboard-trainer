@@ -2,19 +2,12 @@ import { useMemo, useState } from 'react';
 import { buildFretboard } from '../../lib/music/fretboard';
 import { buildTuning } from '../../lib/music/tuning';
 import { noteNumberToName } from '../../lib/music/notes';
+import { intervalLabelFromRoot, noteNumberToName } from '../../lib/music/notes';
 import FretboardGrid from '../../components/FretboardGrid';
 import { useAppStore } from '../../store/appStore';
 import { useStatsStore } from '../../store/statsStore';
 
 const MODE_ID = 'note-quiz';
-
-const emptyHighlights = {
-  scaleNotes: [],
-  chordTones: [],
-  guideTones: [],
-  targetNotes: [],
-  degreeMap: new Map<number, string>(),
-};
 
 export default function NoteQuiz() {
   const { layers, zoom, stringCount, tuningId } = useAppStore();
@@ -22,9 +15,21 @@ export default function NoteQuiz() {
     () => buildFretboard(24, buildTuning(stringCount, tuningId)),
     [stringCount, tuningId],
   );
+  const cells = useMemo(() => buildFretboard(24), []);
+  const { layers, zoom, keyRoot } = useAppStore();
   const recordResult = useStatsStore((state) => state.recordResult);
   const [targetNote, setTargetNote] = useState(() => Math.floor(Math.random() * 12));
   const [feedback, setFeedback] = useState<string>('');
+  const intervalMap = useMemo(
+    () =>
+      new Map(
+        Array.from({ length: 12 }, (_, note) => [
+          note,
+          intervalLabelFromRoot(note, keyRoot),
+        ]),
+      ),
+    [keyRoot],
+  );
 
   const handleClick = (cell: (typeof cells)[number]) => {
     const isCorrect = cell.noteNumber === targetNote;
@@ -44,7 +49,15 @@ export default function NoteQuiz() {
       <FretboardGrid
         cells={cells}
         layers={layers}
-        highlights={emptyHighlights}
+        highlights={{
+          scaleNotes: [],
+          chordTones: [],
+          guideTones: [],
+          targetNotes: [],
+          rootNotes: layers.showRoot ? [keyRoot] : [],
+          degreeMap: new Map<number, string>(),
+          intervalMap: layers.showIntervals ? intervalMap : new Map<number, string>(),
+        }}
         zoom={zoom}
         onCellClick={handleClick}
       />

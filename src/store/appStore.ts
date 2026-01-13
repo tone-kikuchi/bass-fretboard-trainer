@@ -3,7 +3,9 @@ import type { TuningPresetId } from '../lib/music/tuning';
 
 export type LayerSettings = {
   showNoteNames: boolean;
+  showRoot: boolean;
   showDegrees: boolean;
+  showIntervals: boolean;
   showScale: boolean;
   showChord: boolean;
   showGuide: boolean;
@@ -38,7 +40,9 @@ export const useAppStore = create<AppState>((set) => ({
   zoom: 1,
   layers: {
     showNoteNames: true,
+    showRoot: true,
     showDegrees: false,
+    showIntervals: false,
     showScale: true,
     showChord: true,
     showGuide: true,
