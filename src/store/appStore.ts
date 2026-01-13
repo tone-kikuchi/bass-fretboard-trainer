@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { TuningPresetId } from '../lib/music/tuning';
+import type { Language } from '../lib/i18n';
 
 export type LayerSettings = {
   showNoteNames: boolean;
@@ -11,7 +12,20 @@ export type LayerSettings = {
   showGuide: boolean;
 };
 
+const DEFAULT_LAYERS: LayerSettings = {
+  showNoteNames: true,
+  showRoot: true,
+  showDegrees: false,
+  showIntervals: false,
+  showScale: true,
+  showChord: true,
+  showGuide: true,
+};
+
+const DEFAULT_ZOOM = 1;
+
 export type AppState = {
+  language: Language;
   keyRoot: number;
   scaleId: string;
   chordId: string;
@@ -21,6 +35,7 @@ export type AppState = {
   zoom: number;
   isLandscape: boolean;
   layers: LayerSettings;
+  setLanguage: (language: Language) => void;
   setKeyRoot: (keyRoot: number) => void;
   setScaleId: (scaleId: string) => void;
   setChordId: (chordId: string) => void;
@@ -30,26 +45,31 @@ export type AppState = {
   setZoom: (zoom: number) => void;
   setLandscape: (isLandscape: boolean) => void;
   setLayer: (layer: keyof LayerSettings, value: boolean) => void;
+  resetDisplay: () => void;
 };
 
 export const useAppStore = create<AppState>((set) => ({
+  language: 'ja',
   keyRoot: 0,
   scaleId: 'major',
   chordId: 'maj7',
   progressionId: 'ii-v-i',
   stringCount: 4,
   tuningId: 'standard',
+  zoom: DEFAULT_ZOOM,
+  layers: { ...DEFAULT_LAYERS },
   zoom: 1,
   isLandscape: false,
   layers: {
     showNoteNames: true,
     showRoot: true,
-    showDegrees: false,
+    showDegrees: true,
     showIntervals: false,
     showScale: true,
     showChord: true,
     showGuide: true,
   },
+  setLanguage: (language) => set({ language }),
   setKeyRoot: (keyRoot) => set({ keyRoot }),
   setScaleId: (scaleId) => set({ scaleId }),
   setChordId: (chordId) => set({ chordId }),
@@ -65,4 +85,5 @@ export const useAppStore = create<AppState>((set) => ({
         [layer]: value,
       },
     })),
+  resetDisplay: () => set({ zoom: DEFAULT_ZOOM, layers: { ...DEFAULT_LAYERS } }),
 }));

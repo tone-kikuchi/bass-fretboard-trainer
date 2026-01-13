@@ -6,11 +6,13 @@ import { getChordTones, getGuideTones } from '../../lib/music/harmony';
 import FretboardGrid from '../../components/FretboardGrid';
 import { useAppStore } from '../../store/appStore';
 import { useStatsStore } from '../../store/statsStore';
+import { TEXT } from '../../lib/i18n';
 
 const MODE_ID = 'chord-landing';
 
 export default function ChordToneLanding() {
   const { keyRoot, chordId, layers, zoom, stringCount, tuningId, isLandscape } = useAppStore();
+  const { language, keyRoot, chordId, layers, zoom, stringCount, tuningId } = useAppStore();
   const cells = useMemo(
     () => buildFretboard(24, buildTuning(stringCount, tuningId)),
     [stringCount, tuningId],
@@ -19,6 +21,7 @@ export default function ChordToneLanding() {
   const chordTones = getChordTones(keyRoot, chordId);
   const guideTones = getGuideTones(keyRoot, chordId);
   const [feedback, setFeedback] = useState('');
+  const practiceText = TEXT[language].practice.chordLanding;
   const intervalMap = useMemo(
     () =>
       new Map(
@@ -37,10 +40,10 @@ export default function ChordToneLanding() {
 
     setFeedback(
       isTarget
-        ? 'ガイドトーンに着地！'
+        ? practiceText.guide
         : isChord
-          ? 'コードトーンに着地！'
-          : `アウト：${noteNumberToName(cell.noteNumber)}`,
+          ? practiceText.chord
+          : practiceText.out(noteNumberToName(cell.noteNumber)),
     );
     recordResult(MODE_ID, isCorrect);
   };
@@ -58,9 +61,9 @@ export default function ChordToneLanding() {
   return (
     <div className="practice">
       <div className="practice__header">
-        <h3>コードトーン着地</h3>
-        <p>コードトーン、特に 3rd/7th に着地する練習です。</p>
-        <div className="practice__target">ターゲット: ガイドトーン</div>
+        <h3>{practiceText.title}</h3>
+        <p>{practiceText.description}</p>
+        <div className="practice__target">{practiceText.target}</div>
         <p className="practice__feedback">{feedback}</p>
       </div>
       <FretboardGrid

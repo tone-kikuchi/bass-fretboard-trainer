@@ -6,11 +6,13 @@ import { buildProgression, getGuideTones, PROGRESSION_PRESETS } from '../../lib/
 import FretboardGrid from '../../components/FretboardGrid';
 import { useAppStore } from '../../store/appStore';
 import { useStatsStore } from '../../store/statsStore';
+import { TEXT } from '../../lib/i18n';
 
 const MODE_ID = 'guide-tone';
 
 export default function GuideToneTrainer() {
   const { keyRoot, progressionId, layers, zoom, stringCount, tuningId, isLandscape } = useAppStore();
+  const { language, keyRoot, progressionId, layers, zoom, stringCount, tuningId } = useAppStore();
   const cells = useMemo(
     () => buildFretboard(24, buildTuning(stringCount, tuningId)),
     [stringCount, tuningId],
@@ -20,6 +22,7 @@ export default function GuideToneTrainer() {
   const progression = buildProgression(keyRoot, preset);
   const [barIndex, setBarIndex] = useState(0);
   const [feedback, setFeedback] = useState('');
+  const practiceText = TEXT[language].practice.guideTone;
   const intervalMap = useMemo(
     () =>
       new Map(
@@ -39,8 +42,8 @@ export default function GuideToneTrainer() {
     const isCorrect = guideTones.includes(cell.noteNumber);
     setFeedback(
       isCorrect
-        ? '次コードのガイドトーンに着地！'
-        : `違います：${noteNumberToName(cell.noteNumber)}`,
+        ? practiceText.correct
+        : practiceText.incorrect(noteNumberToName(cell.noteNumber)),
     );
     recordResult(MODE_ID, isCorrect);
     setBarIndex((index) => (index + 1) % progression.length);
@@ -59,10 +62,10 @@ export default function GuideToneTrainer() {
   return (
     <div className="practice">
       <div className="practice__header">
-        <h3>ガイドトーン練習</h3>
-        <p>次のコードの 3rd/7th に最短でつなげましょう。</p>
+        <h3>{practiceText.title}</h3>
+        <p>{practiceText.description}</p>
         <div className="practice__target">
-          現在: {current.chordName} → 次: {next.chordName}
+          {practiceText.target(current.chordName, next.chordName)}
         </div>
         <p className="practice__feedback">{feedback}</p>
       </div>

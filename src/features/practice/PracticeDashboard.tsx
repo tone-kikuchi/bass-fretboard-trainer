@@ -4,15 +4,20 @@ import NoteQuiz from './NoteQuiz';
 import DegreeQuiz from './DegreeQuiz';
 import ChordToneLanding from './ChordToneLanding';
 import GuideToneTrainer from './GuideToneTrainer';
+import { TEXT, type Language } from '../../lib/i18n';
 
-const MODES = [
-  { id: 'note', label: 'ノート当て' },
-  { id: 'degree', label: '度数当て' },
-  { id: 'landing', label: 'コードトーン着地' },
-  { id: 'guide', label: 'ガイドトーン' },
-];
+type PracticeDashboardProps = {
+  language: Language;
+};
 
-export default function PracticeDashboard() {
+export default function PracticeDashboard({ language }: PracticeDashboardProps) {
+  const modeLabels = TEXT[language].practice.modes;
+  const modes = [
+    { id: 'note', label: modeLabels.note },
+    { id: 'degree', label: modeLabels.degree },
+    { id: 'landing', label: modeLabels.landing },
+    { id: 'guide', label: modeLabels.guide },
+  ];
   const [mode, setMode] = useState('note');
   const { isLandscape, setLandscape } = useAppStore();
 
@@ -29,7 +34,7 @@ export default function PracticeDashboard() {
         </label>
       </div>
       <div className="practice-dashboard__modes">
-        {MODES.map((item) => (
+        {modes.map((item) => (
           <button
             key={item.id}
             type="button"
