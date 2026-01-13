@@ -208,6 +208,21 @@ main {
   box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.25);
 }
 
+.fretboard__cell--nut::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  right: -5px;
+  width: 8px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #f8fafc, #cbd5f5);
+  box-shadow:
+    0 0 0 1px rgba(15, 23, 42, 0.6),
+    0 6px 8px rgba(15, 23, 42, 0.35);
+  pointer-events: none;
+}
+
 .fretboard__cell--inlay::after {
   content: '';
   width: 10px;
@@ -293,6 +308,45 @@ main {
   background: #0b1120;
   border-radius: 0.8rem;
   border: 1px solid #1f2937;
+}
+
+.scale-playback {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.scale-playback__hint {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.scale-playback__controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.scale-playback__button {
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  border: 1px solid #38bdf8;
+  background: rgba(56, 189, 248, 0.15);
+  color: #e2e8f0;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.scale-playback__button:hover {
+  background: rgba(56, 189, 248, 0.25);
+}
+
+.scale-playback__label {
+  font-size: 0.95rem;
+  color: #e2e8f0;
 }
 
 .scale-info h3 {

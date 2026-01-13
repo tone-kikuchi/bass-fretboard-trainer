@@ -3,6 +3,7 @@ import { useMemo, useState, useEffect } from 'react';
 import FretboardGrid from './components/FretboardGrid';
 import LayerToggles from './components/LayerToggles';
 import SelectorKeyScaleChord from './components/SelectorKeyScaleChord';
+import ScalePlayback from './components/ScalePlayback';
 import Transport from './components/Transport';
 import StatsView from './components/StatsView';
 import PracticeDashboard from './features/practice/PracticeDashboard';
@@ -13,15 +14,11 @@ import { getScaleDefinition } from './lib/music/scales';
 import { getChordTones, getGuideTones, buildProgression, PROGRESSION_PRESETS } from './lib/music/harmony';
 import { useAppStore } from './store/appStore';
 import { useStatsStore } from './store/statsStore';
-
-const motto = [
-  'スケールは素材。着地はコードトーン。',
-  '迷ったら 3rd と 7th（ガイドトーン）を見ろ。',
-  '次のコードの 3rd に着地すると“それっぽく”なる。',
-];
+import { TEXT, getScaleLabel, getTuningLabel } from './lib/i18n';
 
 export default function App() {
   const {
+    language,
     keyRoot,
     scaleId,
     chordId,
@@ -39,14 +36,18 @@ export default function App() {
     setZoom,
     setLayer,
     resetDisplay,
+    setLanguage,
   } = useAppStore();
+  const appText = TEXT[language].app;
   const tuning = useMemo(() => buildTuning(stringCount, tuningId), [stringCount, tuningId]);
   const cells = useMemo(() => buildFretboard(24, tuning), [tuning]);
-  const tuningLabel =
-    TUNING_PRESETS.find((preset) => preset.id === tuningId)?.name ?? TUNING_PRESETS[0].name;
+  const tuningPreset =
+    TUNING_PRESETS.find((preset) => preset.id === tuningId) ?? TUNING_PRESETS[0];
+  const tuningLabel = getTuningLabel(tuningPreset.id, language, tuningPreset.name);
   const stats = useStatsStore((state) => state.modeStats);
   const resetStats = useStatsStore((state) => state.reset);
   const scale = getScaleDefinition(scaleId);
+  const scaleLabel = getScaleLabel(scale.id, language);
   const scaleNotes = scale.intervals.map((interval) => (keyRoot + interval) % 12);
   const scaleNoteNames = scale.intervals.map((interval) => noteNumberToName(keyRoot + interval));
   const stringScaleNotes = useMemo(() => {
@@ -120,17 +121,17 @@ export default function App() {
     <div className="app">
       <header className="app__header">
         <div>
-          <h1>Bass Fretboard Trainer</h1>
-          <p className="app__subtitle">アドリブに効く指板とターゲット練習</p>
+          <h1>{appText.title}</h1>
+          <p className="app__subtitle">{appText.subtitle}</p>
         </div>
         <nav>
           <NavLink to="/" end>
-            Fretboard
+            {appText.nav.fretboard}
           </NavLink>
-          <NavLink to="/practice">Practice</NavLink>
-          <NavLink to="/progression">Progression</NavLink>
-          <NavLink to="/stats">Stats</NavLink>
-          <NavLink to="/help">Help</NavLink>
+          <NavLink to="/practice">{appText.nav.practice}</NavLink>
+          <NavLink to="/progression">{appText.nav.progression}</NavLink>
+          <NavLink to="/stats">{appText.nav.stats}</NavLink>
+          <NavLink to="/help">{appText.nav.help}</NavLink>
         </nav>
       </header>
 
@@ -140,14 +141,16 @@ export default function App() {
             path="/"
             element={
               <section className="page">
-                <h2>Fretboard</h2>
+                <h2>{appText.pages.fretboard}</h2>
                 <SelectorKeyScaleChord
+                  language={language}
                   keyRoot={keyRoot}
                   scaleId={scaleId}
                   chordId={chordId}
                   progressionId={progressionId}
                   stringCount={stringCount}
                   tuningId={tuningId}
+                  onLanguageChange={setLanguage}
                   onKeyChange={setKeyRoot}
                   onScaleChange={setScaleId}
                   onChordChange={setChordId}
@@ -161,9 +164,10 @@ export default function App() {
                     表示をリセット
                   </button>
                 </div>
+                <LayerToggles language={language} layers={layers} onToggle={setLayer} />
                 <div className="zoom">
                   <label>
-                    Zoom
+                    {appText.zoom}
                     <input
                       type="range"
                       min={0.8}
@@ -177,14 +181,29 @@ export default function App() {
                 </div>
                 <FretboardGrid cells={cells} layers={layers} highlights={highlights} zoom={zoom} />
                 <div className="legend">
-                  <span>Key: {noteNumberToName(keyRoot)}</span>
-                  <span>Scale: {scale.name}</span>
-                  <span>Tuning: {tuningLabel}</span>
+                  <span>
+                    {appText.legend.key}: {noteNumberToName(keyRoot)}
+                  </span>
+                  <span>
+                    {appText.legend.scale}: {scaleLabel}
+                  </span>
+                  <span>
+                    {appText.legend.tuning}: {tuningLabel}
+                  </span>
                 </div>
                 <div className="scale-info">
+                  <div className="scale-playback">
+                    <div>
+                      <h3>スケール再生</h3>
+                      <p className="scale-playback__hint">
+                        キーとスケールを選んで、ドレミファソラシドのように順番で再生できます。
+                      </p>
+                    </div>
+                    <ScalePlayback keyRoot={keyRoot} scale={scale} />
+                  </div>
                   <div>
                     <h3>
-                      {noteNumberToName(keyRoot)} {scale.name} の音列
+                      {noteNumberToName(keyRoot)} {scaleLabel} {appText.scaleInfo.notes}
                     </h3>
                     <div className="scale-info__notes">
                       {scaleNoteNames.map((note, index) => (
@@ -195,7 +214,7 @@ export default function App() {
                     </div>
                   </div>
                   <div>
-                    <h3>指板上の並び (0-12フレット)</h3>
+                    <h3>{appText.scaleInfo.fretboard}</h3>
                     <div className="scale-info__strings">
                       {stringScaleNotes.map((string) => (
                         <div key={string.stringName} className="scale-info__string">
@@ -222,8 +241,8 @@ export default function App() {
             path="/practice"
             element={
               <section className="page">
-                <h2>Practice</h2>
-                <PracticeDashboard />
+                <h2>{appText.pages.practice}</h2>
+                <PracticeDashboard language={language} />
               </section>
             }
           />
@@ -231,14 +250,16 @@ export default function App() {
             path="/progression"
             element={
               <section className="page">
-                <h2>Progression</h2>
+                <h2>{appText.pages.progression}</h2>
                 <SelectorKeyScaleChord
+                  language={language}
                   keyRoot={keyRoot}
                   scaleId={scaleId}
                   chordId={chordId}
                   progressionId={progressionId}
                   stringCount={stringCount}
                   tuningId={tuningId}
+                  onLanguageChange={setLanguage}
                   onKeyChange={setKeyRoot}
                   onScaleChange={setScaleId}
                   onChordChange={setChordId}
@@ -252,7 +273,9 @@ export default function App() {
                     表示をリセット
                   </button>
                 </div>
+                <LayerToggles language={language} layers={layers} onToggle={setLayer} />
                 <Transport
+                  language={language}
                   tempo={tempo}
                   isPlaying={isPlaying}
                   currentBar={currentBar}
@@ -284,8 +307,8 @@ export default function App() {
             path="/stats"
             element={
               <section className="page">
-                <h2>Stats</h2>
-                <StatsView stats={stats} onReset={resetStats} />
+                <h2>{appText.pages.stats}</h2>
+                <StatsView language={language} stats={stats} onReset={resetStats} />
               </section>
             }
           />
@@ -293,36 +316,25 @@ export default function App() {
             path="/help"
             element={
               <section className="page">
-                <h2>Help</h2>
+                <h2>{appText.pages.help}</h2>
                 <div className="help">
-                  <h3>最小ルール</h3>
+                  <h3>{appText.help.minimalRules}</h3>
                   <ul>
-                    {motto.map((line) => (
+                    {appText.help.mottos.map((line) => (
                       <li key={line}>{line}</li>
                     ))}
                   </ul>
-                  <h3>使い方</h3>
+                  <h3>{appText.help.usage}</h3>
                   <ul>
-                    <li>Fretboard: キー/スケール/コードを選んで指板を確認。</li>
-                    <li>Practice: 4つの練習モードでターゲットに着地。</li>
-                    <li>Progression: 進行の中でガイドトーンを視覚化。</li>
-                    <li>Stats: 正答率で苦手ポイントを可視化。</li>
+                    {appText.help.usageItems.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
                   </ul>
-                  <h3>機能ガイド</h3>
+                  <h3>{appText.help.features}</h3>
                   <ul>
-                    <li>Strings: 弦の本数を4弦/5弦で切り替えます。</li>
-                    <li>Key: 表示の基準となるキー（ルート音）を選択します。</li>
-                    <li>Scale: キーに対するスケールを選択します。</li>
-                    <li>Chord: コードトーン/ガイドトーンの対象となるコードを選択します。</li>
-                    <li>Progression: 進行プリセットを選び、バーごとのガイドトーンを表示します。</li>
-                    <li>Zoom: 指板の拡大率を調整します。</li>
-                    <li>音名: 各ポジションの音名を表示します。</li>
-                    <li>ルート: キーのルート音を強調表示します。</li>
-                    <li>度数: スケール内の度数（1〜7）を表示します。</li>
-                    <li>ルート度数: ルートからの距離（1, b2, 2...）を表示します。</li>
-                    <li>スケール: 選択中のスケール音を色で表示します。</li>
-                    <li>コードトーン: 選択中コードの構成音を色で表示します。</li>
-                    <li>ガイドトーン: 3rd/7th を枠で強調表示します。</li>
+                    {appText.help.featureItems.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
                   </ul>
                 </div>
               </section>

@@ -1,3 +1,4 @@
+import { playNote } from '../lib/audio/playNote';
 import { noteNumberToName } from '../lib/music/notes';
 import type { FretboardCell } from '../lib/music/fretboard';
 import type { LayerSettings } from '../store/appStore';
@@ -82,7 +83,12 @@ export default function FretboardGrid({
                 const isRoot = hasNote(highlights.rootNotes, cell.noteNumber);
                 const isInlay = INLAY_FRETS.has(cell.fret);
                 const isDoubleInlay = DOUBLE_INLAY_FRETS.has(cell.fret);
-                const showPositionNumber = isInlay && stringIndex === middleStringIndex;
+                const isNut = cell.fret === 0;
+                const showPositionNumber =
+                  isInlay &&
+                  stringIndex === middleStringIndex &&
+                  !layers.showDegrees &&
+                  !layers.showIntervals;
                 return (
                   <button
                     key={`${cell.stringIndex}-${cell.fret}`}
@@ -93,10 +99,14 @@ export default function FretboardGrid({
                       `${isGuide ? ' fretboard__cell--guide' : ''}` +
                       `${isTarget ? ' fretboard__cell--target' : ''}` +
                       `${isRoot ? ' fretboard__cell--root' : ''}` +
+                      `${isNut ? ' fretboard__cell--nut' : ''}` +
                       `${isInlay ? ' fretboard__cell--inlay' : ''}` +
                       `${isDoubleInlay ? ' fretboard__cell--double' : ''}`
                     }
-                    onClick={() => onCellClick?.(cell)}
+                    onClick={() => {
+                      playNote(cell.noteNumber, cell.octave);
+                      onCellClick?.(cell);
+                    }}
                     type="button"
                   >
                     <div className="fretboard__note">

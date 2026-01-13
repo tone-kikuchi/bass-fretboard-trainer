@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { TuningPresetId } from '../lib/music/tuning';
+import type { Language } from '../lib/i18n';
 
 export type LayerSettings = {
   showNoteNames: boolean;
@@ -24,6 +25,7 @@ const DEFAULT_LAYERS: LayerSettings = {
 const DEFAULT_ZOOM = 1;
 
 export type AppState = {
+  language: Language;
   keyRoot: number;
   scaleId: string;
   chordId: string;
@@ -32,6 +34,7 @@ export type AppState = {
   tuningId: TuningPresetId;
   zoom: number;
   layers: LayerSettings;
+  setLanguage: (language: Language) => void;
   setKeyRoot: (keyRoot: number) => void;
   setScaleId: (scaleId: string) => void;
   setChordId: (chordId: string) => void;
@@ -44,6 +47,7 @@ export type AppState = {
 };
 
 export const useAppStore = create<AppState>((set) => ({
+  language: 'ja',
   keyRoot: 0,
   scaleId: 'major',
   chordId: 'maj7',
@@ -52,6 +56,17 @@ export const useAppStore = create<AppState>((set) => ({
   tuningId: 'standard',
   zoom: DEFAULT_ZOOM,
   layers: { ...DEFAULT_LAYERS },
+  zoom: 1,
+  layers: {
+    showNoteNames: true,
+    showRoot: true,
+    showDegrees: true,
+    showIntervals: false,
+    showScale: true,
+    showChord: true,
+    showGuide: true,
+  },
+  setLanguage: (language) => set({ language }),
   setKeyRoot: (keyRoot) => set({ keyRoot }),
   setScaleId: (scaleId) => set({ scaleId }),
   setChordId: (chordId) => set({ chordId }),
