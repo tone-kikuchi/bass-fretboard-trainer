@@ -221,16 +221,22 @@ main {
 .fretboard__note {
   font-size: 0.95rem;
   font-weight: 600;
+  position: relative;
+  z-index: 1;
 }
 
 .fretboard__degree {
   font-size: 0.8rem;
   color: #cbd5f5;
+  position: relative;
+  z-index: 1;
 }
 
 .fretboard__interval {
   font-size: 0.7rem;
   color: #fbbf24;
+  position: relative;
+  z-index: 1;
 }
 
 .fretboard__root {
@@ -240,6 +246,19 @@ main {
   font-size: 0.55rem;
   color: #facc15;
   letter-spacing: 0.08em;
+  z-index: 1;
+}
+
+.fretboard__position-number {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(226, 232, 240, 0.7);
+  pointer-events: none;
 }
 
 .fretboard__meta {

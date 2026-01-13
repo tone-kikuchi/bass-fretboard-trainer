@@ -7,7 +7,7 @@ import Transport from './components/Transport';
 import StatsView from './components/StatsView';
 import PracticeDashboard from './features/practice/PracticeDashboard';
 import { buildFretboard } from './lib/music/fretboard';
-import { STANDARD_TUNING_4_STRING, STANDARD_TUNING_5_STRING } from './lib/music/tuning';
+import { buildTuning, TUNING_PRESETS } from './lib/music/tuning';
 import { degreeLabel, intervalLabelFromRoot, noteNumberToName } from './lib/music/notes';
 import { getScaleDefinition } from './lib/music/scales';
 import { getChordTones, getGuideTones, buildProgression, PROGRESSION_PRESETS } from './lib/music/harmony';
