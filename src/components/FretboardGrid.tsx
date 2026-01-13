@@ -82,7 +82,11 @@ export default function FretboardGrid({
                 const isRoot = hasNote(highlights.rootNotes, cell.noteNumber);
                 const isInlay = INLAY_FRETS.has(cell.fret);
                 const isDoubleInlay = DOUBLE_INLAY_FRETS.has(cell.fret);
-                const showPositionNumber = isInlay && stringIndex === middleStringIndex;
+                const showPositionNumber =
+                  isInlay &&
+                  stringIndex === middleStringIndex &&
+                  !layers.showDegrees &&
+                  !layers.showIntervals;
                 return (
                   <button
                     key={`${cell.stringIndex}-${cell.fret}`}
