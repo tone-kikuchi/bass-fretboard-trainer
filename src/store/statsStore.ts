@@ -13,11 +13,23 @@ export type StatsState = {
 
 const STORAGE_KEY = 'bass-trainer-stats';
 
-const loadStats = (): Record<string, ModeStats> => {
+const getStorage = () => {
   if (typeof window === 'undefined') {
+    return null;
+  }
+  try {
+    return window.localStorage;
+  } catch {
+    return null;
+  }
+};
+
+const loadStats = (): Record<string, ModeStats> => {
+  const storage = getStorage();
+  if (!storage) {
     return {};
   }
-  const raw = window.localStorage.getItem(STORAGE_KEY);
+  const raw = storage.getItem(STORAGE_KEY);
   if (!raw) {
     return {};
   }
@@ -29,10 +41,15 @@ const loadStats = (): Record<string, ModeStats> => {
 };
 
 const saveStats = (stats: Record<string, ModeStats>) => {
-  if (typeof window === 'undefined') {
+  const storage = getStorage();
+  if (!storage) {
     return;
   }
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(stats));
+  try {
+    storage.setItem(STORAGE_KEY, JSON.stringify(stats));
+  } catch {
+    // Ignore storage write errors (e.g. private mode or disabled storage).
+  }
 };
 
 export const useStatsStore = create<StatsState>((set, get) => ({
