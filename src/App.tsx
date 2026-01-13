@@ -3,7 +3,6 @@ import { useMemo, useState, useEffect } from 'react';
 import AppShell from './components/AppShell';
 import FretboardGrid from './components/FretboardGrid';
 import LayerToggles from './components/LayerToggles';
-import SelectorKeyScaleChord from './components/SelectorKeyScaleChord';
 import ScalePlayback from './components/ScalePlayback';
 import Transport from './components/Transport';
 import StatsView from './components/StatsView';
@@ -279,7 +278,7 @@ export default function App() {
           element={
             <section className="page">
               <h2 className="page__title">{appText.pages.progression}</h2>
-              <SelectorKeyScaleChord
+              <FretboardSettings
                 language={language}
                 keyRoot={keyRoot}
                 scaleId={scaleId}
