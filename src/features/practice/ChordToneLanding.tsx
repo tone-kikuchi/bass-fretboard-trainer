@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { buildFretboard } from '../../lib/music/fretboard';
-import { noteNumberToName } from '../../lib/music/notes';
+import { intervalLabelFromRoot, noteNumberToName } from '../../lib/music/notes';
 import { getChordTones, getGuideTones } from '../../lib/music/harmony';
 import FretboardGrid from '../../components/FretboardGrid';
 import { useAppStore } from '../../store/appStore';
@@ -15,6 +15,16 @@ export default function ChordToneLanding() {
   const chordTones = getChordTones(keyRoot, chordId);
   const guideTones = getGuideTones(keyRoot, chordId);
   const [feedback, setFeedback] = useState('');
+  const intervalMap = useMemo(
+    () =>
+      new Map(
+        Array.from({ length: 12 }, (_, note) => [
+          note,
+          intervalLabelFromRoot(note, keyRoot),
+        ]),
+      ),
+    [keyRoot],
+  );
 
   const handleClick = (cell: (typeof cells)[number]) => {
     const isTarget = guideTones.includes(cell.noteNumber);
@@ -36,7 +46,9 @@ export default function ChordToneLanding() {
     chordTones,
     guideTones,
     targetNotes: guideTones,
+    rootNotes: layers.showRoot ? [keyRoot] : [],
     degreeMap: new Map<number, string>(),
+    intervalMap: layers.showIntervals ? intervalMap : new Map<number, string>(),
   };
 
   return (
