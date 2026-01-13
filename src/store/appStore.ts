@@ -41,7 +41,7 @@ export const useAppStore = create<AppState>((set) => ({
   layers: {
     showNoteNames: true,
     showRoot: true,
-    showDegrees: false,
+    showDegrees: true,
     showIntervals: false,
     showScale: true,
     showChord: true,
