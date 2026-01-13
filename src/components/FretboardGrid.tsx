@@ -1,3 +1,4 @@
+import { playNote } from '../lib/audio/playNote';
 import { noteNumberToName } from '../lib/music/notes';
 import type { FretboardCell } from '../lib/music/fretboard';
 import type { LayerSettings } from '../store/appStore';
@@ -100,7 +101,10 @@ export default function FretboardGrid({
                       `${isInlay ? ' fretboard__cell--inlay' : ''}` +
                       `${isDoubleInlay ? ' fretboard__cell--double' : ''}`
                     }
-                    onClick={() => onCellClick?.(cell)}
+                    onClick={() => {
+                      playNote(cell.noteNumber, cell.octave);
+                      onCellClick?.(cell);
+                    }}
                     type="button"
                   >
                     <div className="fretboard__note">
