@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { buildFretboard } from '../../lib/music/fretboard';
-import { noteNumberToName } from '../../lib/music/notes';
+import { intervalLabelFromRoot, noteNumberToName } from '../../lib/music/notes';
 import { buildProgression, getGuideTones, PROGRESSION_PRESETS } from '../../lib/music/harmony';
 import FretboardGrid from '../../components/FretboardGrid';
 import { useAppStore } from '../../store/appStore';
@@ -16,6 +16,16 @@ export default function GuideToneTrainer() {
   const progression = buildProgression(keyRoot, preset);
   const [barIndex, setBarIndex] = useState(0);
   const [feedback, setFeedback] = useState('');
+  const intervalMap = useMemo(
+    () =>
+      new Map(
+        Array.from({ length: 12 }, (_, note) => [
+          note,
+          intervalLabelFromRoot(note, keyRoot),
+        ]),
+      ),
+    [keyRoot],
+  );
 
   const current = progression[barIndex % progression.length];
   const next = progression[(barIndex + 1) % progression.length];
@@ -37,7 +47,9 @@ export default function GuideToneTrainer() {
     chordTones: [],
     guideTones,
     targetNotes: guideTones,
+    rootNotes: layers.showRoot ? [keyRoot] : [],
     degreeMap: new Map<number, string>(),
+    intervalMap: layers.showIntervals ? intervalMap : new Map<number, string>(),
   };
 
   return (

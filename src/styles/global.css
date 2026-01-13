@@ -114,6 +114,13 @@ main {
   border: 1px solid #111827;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
   transform-origin: top left;
+  width: max-content;
+  min-width: 100%;
+}
+
+.fretboard__wrapper {
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
 }
 
 .fretboard__numbers,
@@ -182,6 +189,11 @@ main {
   outline-offset: -4px;
 }
 
+.fretboard__cell--root {
+  border: 2px solid #facc15;
+  box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.25);
+}
+
 .fretboard__cell--inlay::after {
   content: '';
   width: 10px;
@@ -214,6 +226,20 @@ main {
 .fretboard__degree {
   font-size: 0.8rem;
   color: #cbd5f5;
+}
+
+.fretboard__interval {
+  font-size: 0.7rem;
+  color: #fbbf24;
+}
+
+.fretboard__root {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 0.55rem;
+  color: #facc15;
+  letter-spacing: 0.08em;
 }
 
 .fretboard__meta {
