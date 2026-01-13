@@ -141,6 +141,7 @@ main {
 .fretboard__wrapper--landscape {
   overflow: auto;
   padding: 1rem 0.5rem;
+  max-width: 100%;
 }
 
 .fretboard__frame {
@@ -523,5 +524,16 @@ main {
 @media (max-width: 900px) {
   .fretboard {
     grid-template-columns: repeat(13, minmax(48px, 1fr));
+  }
+
+  .fretboard__wrapper--landscape {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding: 0.5rem 0;
+  }
+
+  .fretboard__frame--landscape {
+    width: 100vh;
   }
 }
