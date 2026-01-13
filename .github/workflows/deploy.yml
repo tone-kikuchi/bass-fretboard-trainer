@@ -5,6 +5,7 @@ on:
     branches: ['main']
     paths-ignore:
       - "README.md"
+      - "docs/**"
 
 permissions:
   contents: read
@@ -13,7 +14,7 @@ permissions:
 
 concurrency:
   group: 'pages'
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
