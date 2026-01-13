@@ -33,6 +33,7 @@ export type AppState = {
   stringCount: 4 | 5;
   tuningId: TuningPresetId;
   zoom: number;
+  isLandscape: boolean;
   layers: LayerSettings;
   setLanguage: (language: Language) => void;
   setKeyRoot: (keyRoot: number) => void;
@@ -42,6 +43,7 @@ export type AppState = {
   setStringCount: (stringCount: 4 | 5) => void;
   setTuningId: (tuningId: TuningPresetId) => void;
   setZoom: (zoom: number) => void;
+  setLandscape: (isLandscape: boolean) => void;
   setLayer: (layer: keyof LayerSettings, value: boolean) => void;
   resetDisplay: () => void;
 };
@@ -57,6 +59,7 @@ export const useAppStore = create<AppState>((set) => ({
   zoom: DEFAULT_ZOOM,
   layers: { ...DEFAULT_LAYERS },
   zoom: 1,
+  isLandscape: false,
   layers: {
     showNoteNames: true,
     showRoot: true,
@@ -74,6 +77,7 @@ export const useAppStore = create<AppState>((set) => ({
   setStringCount: (stringCount) => set({ stringCount }),
   setTuningId: (tuningId) => set({ tuningId }),
   setZoom: (zoom) => set({ zoom }),
+  setLandscape: (isLandscape) => set({ isLandscape }),
   setLayer: (layer, value) =>
     set((state) => ({
       layers: {

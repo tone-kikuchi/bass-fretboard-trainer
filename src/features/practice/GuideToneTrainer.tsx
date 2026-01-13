@@ -11,6 +11,7 @@ import { TEXT } from '../../lib/i18n';
 const MODE_ID = 'guide-tone';
 
 export default function GuideToneTrainer() {
+  const { keyRoot, progressionId, layers, zoom, stringCount, tuningId, isLandscape } = useAppStore();
   const { language, keyRoot, progressionId, layers, zoom, stringCount, tuningId } = useAppStore();
   const cells = useMemo(
     () => buildFretboard(24, buildTuning(stringCount, tuningId)),
@@ -73,6 +74,7 @@ export default function GuideToneTrainer() {
         layers={layers}
         highlights={highlights}
         zoom={zoom}
+        isLandscape={isLandscape}
         onCellClick={handleClick}
       />
     </div>

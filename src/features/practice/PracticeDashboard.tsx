@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useAppStore } from '../../store/appStore';
 import NoteQuiz from './NoteQuiz';
 import DegreeQuiz from './DegreeQuiz';
 import ChordToneLanding from './ChordToneLanding';
@@ -18,9 +19,20 @@ export default function PracticeDashboard({ language }: PracticeDashboardProps) 
     { id: 'guide', label: modeLabels.guide },
   ];
   const [mode, setMode] = useState('note');
+  const { isLandscape, setLandscape } = useAppStore();
 
   return (
     <div className="practice-dashboard">
+      <div className="view-toggles">
+        <label className="toggle">
+          <input
+            type="checkbox"
+            checked={isLandscape}
+            onChange={(event) => setLandscape(event.target.checked)}
+          />
+          横向き表示
+        </label>
+      </div>
       <div className="practice-dashboard__modes">
         {modes.map((item) => (
           <button

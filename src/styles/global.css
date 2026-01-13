@@ -74,7 +74,8 @@ main {
 
 .selector,
 .layer-toggles,
-.zoom {
+.zoom,
+.view-toggles {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
@@ -135,6 +136,20 @@ main {
 .fretboard__wrapper {
   overflow-x: auto;
   padding-bottom: 0.25rem;
+}
+
+.fretboard__wrapper--landscape {
+  overflow: auto;
+  padding: 1rem 0.5rem;
+}
+
+.fretboard__frame {
+  display: inline-block;
+}
+
+.fretboard__frame--landscape {
+  transform-origin: top left;
+  transform: rotate(-90deg) translateX(-100%);
 }
 
 .fretboard__numbers,

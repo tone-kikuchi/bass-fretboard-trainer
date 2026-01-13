@@ -11,6 +11,7 @@ import FretboardGrid from '../../components/FretboardGrid';
 const MODE_ID = 'degree-quiz';
 
 export default function DegreeQuiz() {
+  const { keyRoot, scaleId, layers, zoom, stringCount, tuningId, isLandscape } = useAppStore();
   const { language, keyRoot, scaleId, layers, zoom, stringCount, tuningId } = useAppStore();
   const cells = useMemo(
     () => buildFretboard(24, buildTuning(stringCount, tuningId)),
@@ -70,6 +71,7 @@ export default function DegreeQuiz() {
           intervalMap: layers.showIntervals ? intervalMap : new Map<number, string>(),
         }}
         zoom={zoom}
+        isLandscape={isLandscape}
         onCellClick={handleClick}
       />
     </div>
