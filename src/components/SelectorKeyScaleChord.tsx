@@ -2,6 +2,7 @@ import { NOTE_NAMES } from '../lib/music/notes';
 import { SCALE_DEFINITIONS } from '../lib/music/scales';
 import { CHORD_DEFINITIONS } from '../lib/music/chords';
 import { PROGRESSION_PRESETS } from '../lib/music/harmony';
+import { TUNING_PRESETS, type TuningPresetId } from '../lib/music/tuning';
 
 export type SelectorProps = {
   keyRoot: number;
@@ -9,11 +10,13 @@ export type SelectorProps = {
   chordId: string;
   progressionId: string;
   stringCount: 4 | 5;
+  tuningId: TuningPresetId;
   onKeyChange: (value: number) => void;
   onScaleChange: (value: string) => void;
   onChordChange: (value: string) => void;
   onProgressionChange: (value: string) => void;
   onStringCountChange: (value: 4 | 5) => void;
+  onTuningChange: (value: TuningPresetId) => void;
 };
 
 export default function SelectorKeyScaleChord({
@@ -22,11 +25,13 @@ export default function SelectorKeyScaleChord({
   chordId,
   progressionId,
   stringCount,
+  tuningId,
   onKeyChange,
   onScaleChange,
   onChordChange,
   onProgressionChange,
   onStringCountChange,
+  onTuningChange,
 }: SelectorProps) {
   return (
     <div className="selector">
@@ -38,6 +43,19 @@ export default function SelectorKeyScaleChord({
         >
           <option value={4}>4 Strings</option>
           <option value={5}>5 Strings</option>
+        </select>
+      </label>
+      <label>
+        Tuning
+        <select
+          value={tuningId}
+          onChange={(event) => onTuningChange(event.target.value as TuningPresetId)}
+        >
+          {TUNING_PRESETS.map((preset) => (
+            <option key={preset.id} value={preset.id}>
+              {preset.name}
+            </option>
+          ))}
         </select>
       </label>
       <label>

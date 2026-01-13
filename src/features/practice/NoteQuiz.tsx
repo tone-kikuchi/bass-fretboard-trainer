@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { buildFretboard } from '../../lib/music/fretboard';
+import { buildTuning } from '../../lib/music/tuning';
 import { noteNumberToName } from '../../lib/music/notes';
 import FretboardGrid from '../../components/FretboardGrid';
 import { useAppStore } from '../../store/appStore';
@@ -16,8 +17,11 @@ const emptyHighlights = {
 };
 
 export default function NoteQuiz() {
-  const cells = useMemo(() => buildFretboard(24), []);
-  const { layers, zoom } = useAppStore();
+  const { layers, zoom, stringCount, tuningId } = useAppStore();
+  const cells = useMemo(
+    () => buildFretboard(24, buildTuning(stringCount, tuningId)),
+    [stringCount, tuningId],
+  );
   const recordResult = useStatsStore((state) => state.recordResult);
   const [targetNote, setTargetNote] = useState(() => Math.floor(Math.random() * 12));
   const [feedback, setFeedback] = useState<string>('');

@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import type { TuningPresetId } from '../lib/music/tuning';
 
 export type LayerSettings = {
   showNoteNames: boolean;
@@ -14,6 +15,7 @@ export type AppState = {
   chordId: string;
   progressionId: string;
   stringCount: 4 | 5;
+  tuningId: TuningPresetId;
   zoom: number;
   layers: LayerSettings;
   setKeyRoot: (keyRoot: number) => void;
@@ -21,6 +23,7 @@ export type AppState = {
   setChordId: (chordId: string) => void;
   setProgressionId: (progressionId: string) => void;
   setStringCount: (stringCount: 4 | 5) => void;
+  setTuningId: (tuningId: TuningPresetId) => void;
   setZoom: (zoom: number) => void;
   setLayer: (layer: keyof LayerSettings, value: boolean) => void;
 };
@@ -31,6 +34,7 @@ export const useAppStore = create<AppState>((set) => ({
   chordId: 'maj7',
   progressionId: 'ii-v-i',
   stringCount: 4,
+  tuningId: 'standard',
   zoom: 1,
   layers: {
     showNoteNames: true,
@@ -44,6 +48,7 @@ export const useAppStore = create<AppState>((set) => ({
   setChordId: (chordId) => set({ chordId }),
   setProgressionId: (progressionId) => set({ progressionId }),
   setStringCount: (stringCount) => set({ stringCount }),
+  setTuningId: (tuningId) => set({ tuningId }),
   setZoom: (zoom) => set({ zoom }),
   setLayer: (layer, value) =>
     set((state) => ({
