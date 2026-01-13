@@ -1,20 +1,12 @@
 import { useMemo, useState } from 'react';
 import { buildFretboard } from '../../lib/music/fretboard';
-import { degreeLabel, noteNumberToName } from '../../lib/music/notes';
+import { degreeLabel, intervalLabelFromRoot, noteNumberToName } from '../../lib/music/notes';
 import { getScaleDefinition } from '../../lib/music/scales';
 import { useAppStore } from '../../store/appStore';
 import { useStatsStore } from '../../store/statsStore';
 import FretboardGrid from '../../components/FretboardGrid';
 
 const MODE_ID = 'degree-quiz';
-
-const emptyHighlights = {
-  scaleNotes: [],
-  chordTones: [],
-  guideTones: [],
-  targetNotes: [],
-  degreeMap: new Map<number, string>(),
-};
 
 export default function DegreeQuiz() {
   const cells = useMemo(() => buildFretboard(24), []);
@@ -23,6 +15,16 @@ export default function DegreeQuiz() {
   const scale = getScaleDefinition(scaleId);
   const [degreeIndex, setDegreeIndex] = useState(() => Math.floor(Math.random() * scale.intervals.length));
   const [feedback, setFeedback] = useState('');
+  const intervalMap = useMemo(
+    () =>
+      new Map(
+        Array.from({ length: 12 }, (_, note) => [
+          note,
+          intervalLabelFromRoot(note, keyRoot),
+        ]),
+      ),
+    [keyRoot],
+  );
 
   const targetNote = (keyRoot + scale.intervals[degreeIndex]) % 12;
 
@@ -46,7 +48,15 @@ export default function DegreeQuiz() {
       <FretboardGrid
         cells={cells}
         layers={layers}
-        highlights={emptyHighlights}
+        highlights={{
+          scaleNotes: [],
+          chordTones: [],
+          guideTones: [],
+          targetNotes: [],
+          rootNotes: layers.showRoot ? [keyRoot] : [],
+          degreeMap: new Map<number, string>(),
+          intervalMap: layers.showIntervals ? intervalMap : new Map<number, string>(),
+        }}
         zoom={zoom}
         onCellClick={handleClick}
       />

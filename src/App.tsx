@@ -8,7 +8,7 @@ import StatsView from './components/StatsView';
 import PracticeDashboard from './features/practice/PracticeDashboard';
 import { buildFretboard } from './lib/music/fretboard';
 import { STANDARD_TUNING_4_STRING, STANDARD_TUNING_5_STRING } from './lib/music/tuning';
-import { degreeLabel, noteNumberToName } from './lib/music/notes';
+import { degreeLabel, intervalLabelFromRoot, noteNumberToName } from './lib/music/notes';
 import { getScaleDefinition } from './lib/music/scales';
 import { getChordTones, getGuideTones, buildProgression, PROGRESSION_PRESETS } from './lib/music/harmony';
 import { useAppStore } from './store/appStore';
@@ -49,13 +49,25 @@ export default function App() {
   const chordTones = getChordTones(keyRoot, chordId);
   const guideTones = getGuideTones(keyRoot, chordId);
   const degreeMap = new Map(scaleNotes.map((note, index) => [note, degreeLabel(index)]));
+  const intervalMap = useMemo(
+    () =>
+      new Map(
+        Array.from({ length: 12 }, (_, note) => [
+          note,
+          intervalLabelFromRoot(note, keyRoot),
+        ]),
+      ),
+    [keyRoot],
+  );
 
   const highlights = {
     scaleNotes: layers.showScale ? scaleNotes : [],
     chordTones: layers.showChord ? chordTones : [],
     guideTones: layers.showGuide ? guideTones : [],
     targetNotes: [],
+    rootNotes: layers.showRoot ? [keyRoot] : [],
     degreeMap: layers.showDegrees ? degreeMap : new Map<number, string>(),
+    intervalMap: layers.showIntervals ? intervalMap : new Map<number, string>(),
   };
 
   const preset = PROGRESSION_PRESETS.find((item) => item.id === progressionId) ?? PROGRESSION_PRESETS[0];
@@ -83,7 +95,9 @@ export default function App() {
     chordTones: layers.showChord ? getChordTones(progression[currentBar].root, progression[currentBar].quality) : [],
     guideTones: layers.showGuide ? getGuideTones(progression[currentBar].root, progression[currentBar].quality) : [],
     targetNotes: targetGuide,
+    rootNotes: layers.showRoot ? [keyRoot] : [],
     degreeMap: layers.showDegrees ? degreeMap : new Map<number, string>(),
+    intervalMap: layers.showIntervals ? intervalMap : new Map<number, string>(),
   };
 
   return (
@@ -228,6 +242,22 @@ export default function App() {
                     <li>Practice: 4つの練習モードでターゲットに着地。</li>
                     <li>Progression: 進行の中でガイドトーンを視覚化。</li>
                     <li>Stats: 正答率で苦手ポイントを可視化。</li>
+                  </ul>
+                  <h3>機能ガイド</h3>
+                  <ul>
+                    <li>Strings: 弦の本数を4弦/5弦で切り替えます。</li>
+                    <li>Key: 表示の基準となるキー（ルート音）を選択します。</li>
+                    <li>Scale: キーに対するスケールを選択します。</li>
+                    <li>Chord: コードトーン/ガイドトーンの対象となるコードを選択します。</li>
+                    <li>Progression: 進行プリセットを選び、バーごとのガイドトーンを表示します。</li>
+                    <li>Zoom: 指板の拡大率を調整します。</li>
+                    <li>音名: 各ポジションの音名を表示します。</li>
+                    <li>ルート: キーのルート音を強調表示します。</li>
+                    <li>度数: スケール内の度数（1〜7）を表示します。</li>
+                    <li>ルート度数: ルートからの距離（1, b2, 2...）を表示します。</li>
+                    <li>スケール: 選択中のスケール音を色で表示します。</li>
+                    <li>コードトーン: 選択中コードの構成音を色で表示します。</li>
+                    <li>ガイドトーン: 3rd/7th を枠で強調表示します。</li>
                   </ul>
                 </div>
               </section>
