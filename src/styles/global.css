@@ -194,6 +194,21 @@ main {
   box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.25);
 }
 
+.fretboard__cell--nut::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  right: -5px;
+  width: 8px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #f8fafc, #cbd5f5);
+  box-shadow:
+    0 0 0 1px rgba(15, 23, 42, 0.6),
+    0 6px 8px rgba(15, 23, 42, 0.35);
+  pointer-events: none;
+}
+
 .fretboard__cell--inlay::after {
   content: '';
   width: 10px;
