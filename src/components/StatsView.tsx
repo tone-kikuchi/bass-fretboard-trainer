@@ -1,34 +1,31 @@
+import { TEXT, type Language } from '../lib/i18n';
 import type { ModeStats } from '../store/statsStore';
 
 export type StatsViewProps = {
+  language: Language;
   stats: Record<string, ModeStats>;
   onReset: () => void;
 };
 
-const modeLabel: Record<string, string> = {
-  'note-quiz': 'ノート当てクイズ',
-  'degree-quiz': '度数当てクイズ',
-  'chord-landing': 'コードトーン着地',
-  'guide-tone': 'ガイドトーン練習',
-};
-
-export default function StatsView({ stats, onReset }: StatsViewProps) {
+export default function StatsView({ language, stats, onReset }: StatsViewProps) {
+  const statsText = TEXT[language].stats;
   const entries = Object.entries(stats);
+
   return (
     <div className="stats">
       <div className="stats__header">
-        <h3>練習ログ</h3>
+        <h3>{statsText.title}</h3>
         <button type="button" onClick={onReset}>
-          リセット
+          {statsText.reset}
         </button>
       </div>
       {entries.length === 0 ? (
-        <p>まだ記録がありません。練習を始めましょう。</p>
+        <p>{statsText.empty}</p>
       ) : (
         <ul>
           {entries.map(([mode, value]) => (
             <li key={mode}>
-              <strong>{modeLabel[mode] ?? mode}</strong>: {value.correct} / {value.attempts}
+              <strong>{statsText.modes[mode] ?? mode}</strong>: {value.correct} / {value.attempts}
               ({value.attempts ? Math.round((value.correct / value.attempts) * 100) : 0}%)
             </li>
           ))}
