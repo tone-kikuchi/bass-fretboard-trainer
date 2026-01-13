@@ -7,6 +7,7 @@ import Transport from './components/Transport';
 import StatsView from './components/StatsView';
 import PracticeDashboard from './features/practice/PracticeDashboard';
 import { buildFretboard } from './lib/music/fretboard';
+import { STANDARD_TUNING_4_STRING, STANDARD_TUNING_5_STRING } from './lib/music/tuning';
 import { degreeLabel, noteNumberToName } from './lib/music/notes';
 import { getScaleDefinition } from './lib/music/scales';
 import { getChordTones, getGuideTones, buildProgression, PROGRESSION_PRESETS } from './lib/music/harmony';
@@ -20,21 +21,27 @@ const motto = [
 ];
 
 export default function App() {
-  const cells = useMemo(() => buildFretboard(24), []);
   const {
     keyRoot,
     scaleId,
     chordId,
     progressionId,
+    stringCount,
     zoom,
     layers,
     setKeyRoot,
     setScaleId,
     setChordId,
     setProgressionId,
+    setStringCount,
     setZoom,
     setLayer,
   } = useAppStore();
+  const tuning = useMemo(
+    () => (stringCount === 5 ? STANDARD_TUNING_5_STRING : STANDARD_TUNING_4_STRING),
+    [stringCount],
+  );
+  const cells = useMemo(() => buildFretboard(24, tuning), [tuning]);
   const stats = useStatsStore((state) => state.modeStats);
   const resetStats = useStatsStore((state) => state.reset);
   const scale = getScaleDefinition(scaleId);
@@ -109,10 +116,12 @@ export default function App() {
                   scaleId={scaleId}
                   chordId={chordId}
                   progressionId={progressionId}
+                  stringCount={stringCount}
                   onKeyChange={setKeyRoot}
                   onScaleChange={setScaleId}
                   onChordChange={setChordId}
                   onProgressionChange={setProgressionId}
+                  onStringCountChange={setStringCount}
                 />
                 <LayerToggles layers={layers} onToggle={setLayer} />
                 <div className="zoom">
@@ -156,10 +165,12 @@ export default function App() {
                   scaleId={scaleId}
                   chordId={chordId}
                   progressionId={progressionId}
+                  stringCount={stringCount}
                   onKeyChange={setKeyRoot}
                   onScaleChange={setScaleId}
                   onChordChange={setChordId}
                   onProgressionChange={setProgressionId}
+                  onStringCountChange={setStringCount}
                 />
                 <LayerToggles layers={layers} onToggle={setLayer} />
                 <Transport

@@ -13,12 +13,14 @@ export type AppState = {
   scaleId: string;
   chordId: string;
   progressionId: string;
+  stringCount: 4 | 5;
   zoom: number;
   layers: LayerSettings;
   setKeyRoot: (keyRoot: number) => void;
   setScaleId: (scaleId: string) => void;
   setChordId: (chordId: string) => void;
   setProgressionId: (progressionId: string) => void;
+  setStringCount: (stringCount: 4 | 5) => void;
   setZoom: (zoom: number) => void;
   setLayer: (layer: keyof LayerSettings, value: boolean) => void;
 };
@@ -28,6 +30,7 @@ export const useAppStore = create<AppState>((set) => ({
   scaleId: 'major',
   chordId: 'maj7',
   progressionId: 'ii-v-i',
+  stringCount: 4,
   zoom: 1,
   layers: {
     showNoteNames: true,
@@ -40,6 +43,7 @@ export const useAppStore = create<AppState>((set) => ({
   setScaleId: (scaleId) => set({ scaleId }),
   setChordId: (chordId) => set({ chordId }),
   setProgressionId: (progressionId) => set({ progressionId }),
+  setStringCount: (stringCount) => set({ stringCount }),
   setZoom: (zoom) => set({ zoom }),
   setLayer: (layer, value) =>
     set((state) => ({

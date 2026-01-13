@@ -8,10 +8,12 @@ export type SelectorProps = {
   scaleId: string;
   chordId: string;
   progressionId: string;
+  stringCount: 4 | 5;
   onKeyChange: (value: number) => void;
   onScaleChange: (value: string) => void;
   onChordChange: (value: string) => void;
   onProgressionChange: (value: string) => void;
+  onStringCountChange: (value: 4 | 5) => void;
 };
 
 export default function SelectorKeyScaleChord({
@@ -19,13 +21,25 @@ export default function SelectorKeyScaleChord({
   scaleId,
   chordId,
   progressionId,
+  stringCount,
   onKeyChange,
   onScaleChange,
   onChordChange,
   onProgressionChange,
+  onStringCountChange,
 }: SelectorProps) {
   return (
     <div className="selector">
+      <label>
+        Strings
+        <select
+          value={stringCount}
+          onChange={(event) => onStringCountChange(Number(event.target.value) as 4 | 5)}
+        >
+          <option value={4}>4 Strings</option>
+          <option value={5}>5 Strings</option>
+        </select>
+      </label>
       <label>
         Key
         <select value={keyRoot} onChange={(event) => onKeyChange(Number(event.target.value))}>

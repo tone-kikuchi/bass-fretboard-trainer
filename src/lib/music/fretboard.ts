@@ -1,5 +1,5 @@
 import { normalizeNoteNumber } from './notes';
-import { STANDARD_TUNING, type StringTuning } from './tuning';
+import { STANDARD_TUNING_5_STRING, type StringTuning } from './tuning';
 
 export type FretboardCell = {
   stringIndex: number;
@@ -11,7 +11,7 @@ export type FretboardCell = {
 
 export const buildFretboard = (
   fretCount = 24,
-  tuning: StringTuning[] = STANDARD_TUNING,
+  tuning: StringTuning[] = STANDARD_TUNING_5_STRING,
 ): FretboardCell[] => {
   const cells: FretboardCell[] = [];
   tuning.forEach((string, stringIndex) => {
