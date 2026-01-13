@@ -10,8 +10,7 @@ import { TEXT } from '../../lib/i18n';
 const MODE_ID = 'note-quiz';
 
 export default function NoteQuiz() {
-  const { layers, zoom, stringCount, tuningId, isLandscape } = useAppStore();
-  const { language, layers, zoom, stringCount, tuningId } = useAppStore();
+  const { language, layers, zoom, stringCount, tuningId, isLandscape } = useAppStore();
   const cells = useMemo(
     () => buildFretboard(24, buildTuning(stringCount, tuningId)),
     [stringCount, tuningId],
