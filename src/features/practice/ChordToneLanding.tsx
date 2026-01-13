@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
 import { buildFretboard } from '../../lib/music/fretboard';
+import { buildTuning } from '../../lib/music/tuning';
+import { noteNumberToName } from '../../lib/music/notes';
 import { intervalLabelFromRoot, noteNumberToName } from '../../lib/music/notes';
 import { getChordTones, getGuideTones } from '../../lib/music/harmony';
 import FretboardGrid from '../../components/FretboardGrid';
@@ -9,8 +11,11 @@ import { useStatsStore } from '../../store/statsStore';
 const MODE_ID = 'chord-landing';
 
 export default function ChordToneLanding() {
-  const cells = useMemo(() => buildFretboard(24), []);
-  const { keyRoot, chordId, layers, zoom } = useAppStore();
+  const { keyRoot, chordId, layers, zoom, stringCount, tuningId } = useAppStore();
+  const cells = useMemo(
+    () => buildFretboard(24, buildTuning(stringCount, tuningId)),
+    [stringCount, tuningId],
+  );
   const recordResult = useStatsStore((state) => state.recordResult);
   const chordTones = getChordTones(keyRoot, chordId);
   const guideTones = getGuideTones(keyRoot, chordId);

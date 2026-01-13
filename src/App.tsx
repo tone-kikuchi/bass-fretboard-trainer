@@ -27,6 +27,7 @@ export default function App() {
     chordId,
     progressionId,
     stringCount,
+    tuningId,
     zoom,
     layers,
     setKeyRoot,
@@ -34,14 +35,14 @@ export default function App() {
     setChordId,
     setProgressionId,
     setStringCount,
+    setTuningId,
     setZoom,
     setLayer,
   } = useAppStore();
-  const tuning = useMemo(
-    () => (stringCount === 5 ? STANDARD_TUNING_5_STRING : STANDARD_TUNING_4_STRING),
-    [stringCount],
-  );
+  const tuning = useMemo(() => buildTuning(stringCount, tuningId), [stringCount, tuningId]);
   const cells = useMemo(() => buildFretboard(24, tuning), [tuning]);
+  const tuningLabel =
+    TUNING_PRESETS.find((preset) => preset.id === tuningId)?.name ?? TUNING_PRESETS[0].name;
   const stats = useStatsStore((state) => state.modeStats);
   const resetStats = useStatsStore((state) => state.reset);
   const scale = getScaleDefinition(scaleId);
@@ -131,11 +132,13 @@ export default function App() {
                   chordId={chordId}
                   progressionId={progressionId}
                   stringCount={stringCount}
+                  tuningId={tuningId}
                   onKeyChange={setKeyRoot}
                   onScaleChange={setScaleId}
                   onChordChange={setChordId}
                   onProgressionChange={setProgressionId}
                   onStringCountChange={setStringCount}
+                  onTuningChange={setTuningId}
                 />
                 <LayerToggles layers={layers} onToggle={setLayer} />
                 <div className="zoom">
@@ -156,6 +159,7 @@ export default function App() {
                 <div className="legend">
                   <span>Key: {noteNumberToName(keyRoot)}</span>
                   <span>Scale: {scale.name}</span>
+                  <span>Tuning: {tuningLabel}</span>
                 </div>
               </section>
             }
@@ -180,11 +184,13 @@ export default function App() {
                   chordId={chordId}
                   progressionId={progressionId}
                   stringCount={stringCount}
+                  tuningId={tuningId}
                   onKeyChange={setKeyRoot}
                   onScaleChange={setScaleId}
                   onChordChange={setChordId}
                   onProgressionChange={setProgressionId}
                   onStringCountChange={setStringCount}
+                  onTuningChange={setTuningId}
                 />
                 <LayerToggles layers={layers} onToggle={setLayer} />
                 <Transport
